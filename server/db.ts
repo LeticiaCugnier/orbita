@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { InsertUser, users, projects, InsertProject, briefings, InsertBriefing, contracts, InsertContract, approvals, InsertApproval, comments, InsertComment } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -89,4 +89,86 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+/**
+ * Projetos queries
+ */
+export async function getUserProjects(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(projects).where(eq(projects.userId, userId)).orderBy(projects.createdAt);
+}
+
+export async function getProjectById(projectId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(projects).where(eq(projects.id, projectId)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createProject(data: InsertProject) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(projects).values(data);
+  return result;
+}
+
+/**
+ * Briefings queries
+ */
+export async function getProjectBriefing(projectId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(briefings).where(eq(briefings.projectId, projectId)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createBriefing(data: InsertBriefing) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.insert(briefings).values(data);
+}
+
+/**
+ * Contracts queries
+ */
+export async function getProjectContracts(projectId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(contracts).where(eq(contracts.projectId, projectId)).orderBy(contracts.createdAt);
+}
+
+export async function createContract(data: InsertContract) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.insert(contracts).values(data);
+}
+
+/**
+ * Approvals queries
+ */
+export async function getProjectApprovals(projectId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(approvals).where(eq(approvals.projectId, projectId)).orderBy(approvals.createdAt);
+}
+
+export async function createApproval(data: InsertApproval) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.insert(approvals).values(data);
+}
+
+/**
+ * Comments queries
+ */
+export async function getApprovalComments(approvalId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(comments).where(eq(comments.approvalId, approvalId)).orderBy(comments.createdAt);
+}
+
+export async function createComment(data: InsertComment) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.insert(comments).values(data);
+}
