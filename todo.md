@@ -55,3 +55,11 @@
 - [x] Adicionar filtros de status (Geral, Aprovados, Em Andamento, Finalizados)
 - [x] Implementar fluxo de conversão de orçamento finalizado em projeto
 - [x] Criar visualização de orçamentos com detalhes e ações
+
+
+## Fase 9: IA Jurídica para Contratos
+- [x] Integrar LLM para análise e sugestões de contratos
+- [x] Criar interface de chat para suporte jurídico
+- [x] Implementar sugestões de cláusulas e personalizações
+- [x] Adicionar análise de risco de cláusulas
+- [x] Criar histórico de análises e sugestões

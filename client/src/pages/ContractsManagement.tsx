@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, FileText, Download, Eye } from "lucide-react";
+import LegalAIAssistant from "@/components/LegalAIAssistant";
 
 const contractTemplates = [
   {
@@ -86,10 +87,13 @@ export default function ContractsManagement() {
           <h1 className="text-3xl font-bold font-['Space_Grotesk']">Gestão de Contratos</h1>
           <p className="text-muted-foreground mt-1">Crie, personalize e gerencie seus contratos</p>
         </div>
-        <Button size="lg" className="gap-2">
-          <Plus className="w-4 h-4" />
-          Novo Contrato
-        </Button>
+        <div className="flex gap-2">
+          <LegalAIAssistant contractContent="Contrato de exemplo..." />
+          <Button size="lg" className="gap-2">
+            <Plus className="w-4 h-4" />
+            Novo Contrato
+          </Button>
+        </div>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>

@@ -81,6 +81,39 @@ export const appRouter = router({
       templateType: z.string().optional(),
       content: z.string(),
     })).mutation(({ input }) => createContract(input)),
+    analyzeLegal: protectedProcedure.input(z.object({
+      contractContent: z.string(),
+      userQuery: z.string(),
+    })).mutation(async ({ input }) => {
+      const systemPrompt = `Você é um assistente jurídico especializado em contratos. Analise contratos, identifique riscos legais, sugira cláusulas e forneça suporte legal.
+
+Ao responder:
+1. Seja claro e profissional
+2. Identifique riscos (alto, médio, baixo)
+3. Forneça sugestões práticas
+4. Use linguagem acessível mas precisa
+5. Cite cláusulas relevantes quando aplicável`;
+
+      const response = await invokeLLM({
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: `Contrato:
+
+${input.contractContent}
+
+Pergunta: ${input.userQuery}` },
+        ],
+      });
+
+      const analysisContent = response.choices[0]?.message.content;
+      const analysis = typeof analysisContent === 'string' ? analysisContent : "Não foi possível analisar o contrato.";
+      const riskLevel = analysis.toLowerCase().includes("alto risco") ? "high" : analysis.toLowerCase().includes("médio") ? "medium" : "low";
+
+      return {
+        analysis,
+        riskLevel,
+      };
+    }),
   }),
 
   approvals: router({
