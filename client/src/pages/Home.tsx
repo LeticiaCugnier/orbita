@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/_core/hooks/useAuth";
 import { 
   Plus, 
   Calendar, 
@@ -12,10 +13,20 @@ import {
   TrendingUp,
   FileText,
   Users,
-  Zap
+  Zap,
+  LogOut
 } from "lucide-react";
+import { trpc } from "@/lib/trpc";
 
 export default function Home() {
+  const { logout } = useAuth();
+  const logoutMutation = trpc.auth.logout.useMutation();
+
+  const handleLogout = async () => {
+    await logoutMutation.mutateAsync();
+    logout();
+  };
+
   // Dados mock para demonstração
   const projects = [
     { id: 1, name: "Redesign Website", client: "Tech Corp", status: "Em Criação", progress: 65, dueDate: "15 Jun" },
@@ -44,10 +55,16 @@ export default function Home() {
             <h1 className="text-3xl font-bold font-['Space_Grotesk']">Dashboard</h1>
             <p className="text-muted-foreground mt-1">Bem-vindo de volta! Aqui está sua visão geral de projetos.</p>
           </div>
-          <Button size="lg" className="gap-2 w-full md:w-auto">
-            <Plus className="w-4 h-4" />
-            Novo Projeto
-          </Button>
+          <div className="flex gap-2 w-full md:w-auto">
+            <Button size="lg" className="gap-2 flex-1 md:flex-none">
+              <Plus className="w-4 h-4" />
+              Novo Projeto
+            </Button>
+            <Button size="lg" variant="outline" className="gap-2" onClick={handleLogout}>
+              <LogOut className="w-4 h-4" />
+              Sair
+            </Button>
+          </div>
         </div>
 
         {/* Stats Cards */}
