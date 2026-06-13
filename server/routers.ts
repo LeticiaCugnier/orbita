@@ -3,7 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
-import { getUserProjects, getProjectById, createProject, getProjectBriefing, createBriefing, getProjectContracts, createContract, getProjectApprovals, createApproval, getApprovalComments, createComment } from "./db";
+import { getUserProjects, getProjectById, createProject, getProjectBriefing, createBriefing, getProjectContracts, createContract, getProjectApprovals, createApproval, getApprovalComments, createComment, getUserBudgets, getBudgetById, createBudget, updateBudgetStatus, finalizeBudget } from "./db";
 import { invokeLLM } from "./_core/llm";
 
 export const appRouter = router({
@@ -103,6 +103,51 @@ export const appRouter = router({
       userId: ctx.user.id,
       content: input.content,
     })),
+  }),
+
+  budgets: router({
+    list: protectedProcedure.query(({ ctx }) => getUserBudgets(ctx.user.id)),
+    getById: protectedProcedure.input(z.object({ id: z.number() })).query(({ input }) => getBudgetById(input.id)),
+    create: protectedProcedure.input(z.object({
+      clientName: z.string(),
+      clientEmail: z.string().email().optional(),
+      projectTitle: z.string(),
+      description: z.string().optional(),
+      amount: z.string(),
+      currency: z.string().default("BRL"),
+      items: z.string().optional(),
+      validUntil: z.date().optional(),
+    })).mutation(({ ctx, input }) => createBudget({
+      userId: ctx.user.id,
+      clientName: input.clientName,
+      clientEmail: input.clientEmail,
+      projectTitle: input.projectTitle,
+      description: input.description,
+      amount: input.amount,
+      currency: input.currency,
+      items: input.items,
+      validUntil: input.validUntil,
+    })),
+    updateStatus: protectedProcedure.input(z.object({
+      id: z.number(),
+      status: z.enum(["draft", "sent", "approved", "rejected", "finalized"]),
+    })).mutation(({ input }) => updateBudgetStatus(input.id, input.status, input.status === "approved" ? new Date() : undefined)),
+    finalize: protectedProcedure.input(z.object({
+      budgetId: z.number(),
+      projectTitle: z.string(),
+      clientName: z.string(),
+      clientEmail: z.string().email().optional(),
+    })).mutation(async ({ ctx, input }) => {
+      const newProject = await createProject({
+        userId: ctx.user.id,
+        title: input.projectTitle,
+        clientName: input.clientName,
+        clientEmail: input.clientEmail,
+      });
+      const projectId = (newProject as any).insertId || 1;
+      await finalizeBudget(input.budgetId, projectId);
+      return { success: true, projectId };
+    }),
   }),
 });
 

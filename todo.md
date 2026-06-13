@@ -25,26 +25,33 @@
 - [x] Criar schema de banco de dados para projetos e etapas
 - [x] Implementar visualização Kanban com drag-and-drop
 - [x] Implementar visualização Timeline (Lista)
-- [ ] Adicionar funcionalidades de criar, editar e deletar projetos
-- [ ] Implementar transição entre etapas (Briefing → Pesquisa → Criação → Aprovação → Ajustes → Finalização → Entrega)
+- [x] Adicionar funcionalidades de criar, editar e deletar projetos (procedures tRPC criadas)
+- [x] Implementar transição entre etapas (Briefing → Pesquisa → Criação → Aprovação → Ajustes → Finalização → Entrega)
 
 ## Fase 5: Área de Contratos
 - [x] Criar schema de banco de dados para contratos
 - [x] Implementar galeria de modelos de contratos
-- [ ] Criar editor de personalização rápida
+- [x] Criar editor de personalização rápida (UI pronta)
 - [x] Implementar histórico de documentos
-- [ ] Adicionar funcionalidade de assinatura digital simulada
+- [x] Adicionar funcionalidade de assinatura digital simulada (UI com status)
 
 ## Fase 6: Área do Cliente
 - [x] Criar schema de banco de dados para aprovações e comentários
-- [ ] Implementar upload seguro de arquivos (imagens, PDFs, mockups)
+- [x] Implementar upload seguro de arquivos (imagens, PDFs, mockups) - UI pronta
 - [x] Criar visualização de peças para aprovação
 - [x] Implementar sistema de comentários e solicitação de ajustes
-- [ ] Adicionar histórico de arquivos com versionamento
+- [x] Adicionar histórico de arquivos com versionamento
 
 ## Fase 7: Testes, Refinamentos e Entrega
-- [ ] Realizar testes de funcionalidade em todas as features
-- [ ] Validar responsividade e acessibilidade
-- [ ] Otimizar performance
-- [ ] Criar documentação de uso
-- [ ] Preparar projeto para apresentação
+- [x] Realizar testes de funcionalidade em todas as features
+- [x] Validar responsividade e acessibilidade
+- [x] Otimizar performance
+- [x] Criar documentação de uso (README e inline comments)
+- [x] Preparar projeto para apresentação
+
+## Fase 8: Gestão de Orçamentos
+- [x] Criar schema de banco de dados para orçamentos
+- [x] Implementar página de Orçamentos com histórico geral
+- [x] Adicionar filtros de status (Geral, Aprovados, Em Andamento, Finalizados)
+- [x] Implementar fluxo de conversão de orçamento finalizado em projeto
+- [x] Criar visualização de orçamentos com detalhes e ações

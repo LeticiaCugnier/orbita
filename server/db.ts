@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, projects, InsertProject, briefings, InsertBriefing, contracts, InsertContract, approvals, InsertApproval, comments, InsertComment } from "../drizzle/schema";
+import { InsertUser, users, projects, InsertProject, briefings, InsertBriefing, contracts, InsertContract, approvals, InsertApproval, comments, InsertComment, budgets, InsertBudget, Budget } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -171,4 +171,44 @@ export async function createComment(data: InsertComment) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   return db.insert(comments).values(data);
+}
+
+/**
+ * Budgets queries
+ */
+export async function getUserBudgets(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(budgets).where(eq(budgets.userId, userId)).orderBy(budgets.createdAt);
+}
+
+export async function getBudgetById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(budgets).where(eq(budgets.id, id)).limit(1);
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function createBudget(data: InsertBudget) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.insert(budgets).values(data);
+}
+
+export async function updateBudgetStatus(id: number, status: string, approvedAt?: Date) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const updateData: any = { status, updatedAt: new Date() };
+  if (approvedAt) updateData.approvedAt = approvedAt;
+  return db.update(budgets).set(updateData).where(eq(budgets.id, id));
+}
+
+export async function finalizeBudget(id: number, projectId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.update(budgets).set({
+    status: "finalized",
+    finalizedProjectId: projectId,
+    updatedAt: new Date()
+  }).where(eq(budgets.id, id));
 }

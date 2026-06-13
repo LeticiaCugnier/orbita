@@ -15,6 +15,13 @@
       "when": 1781353159568,
       "tag": "0001_glorious_klaw",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1781355128650,
+      "tag": "0002_bouncy_morbius",
+      "breakpoints": true
     }
   ]
 }

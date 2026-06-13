@@ -117,3 +117,27 @@ export const comments = mysqlTable("comments", {
 
 export type Comment = typeof comments.$inferSelect;
 export type InsertComment = typeof comments.$inferInsert;
+
+/**
+ * Budgets table - armazena os orçamentos
+ */
+export const budgets = mysqlTable("budgets", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  clientName: varchar("clientName", { length: 255 }).notNull(),
+  clientEmail: varchar("clientEmail", { length: 320 }),
+  projectTitle: varchar("projectTitle", { length: 255 }).notNull(),
+  description: text("description"),
+  amount: varchar("amount", { length: 100 }).notNull(),
+  currency: varchar("currency", { length: 10 }).default("BRL").notNull(),
+  items: text("items"), // JSON array of budget items
+  status: mysqlEnum("status", ["draft", "sent", "approved", "rejected", "finalized"]).default("draft").notNull(),
+  validUntil: timestamp("validUntil"),
+  approvedAt: timestamp("approvedAt"),
+  finalizedProjectId: int("finalizedProjectId"), // Reference to project when budget is finalized
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Budget = typeof budgets.$inferSelect;
+export type InsertBudget = typeof budgets.$inferInsert;
