@@ -4,6 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import { getUserProjects, getProjectById, createProject, getProjectBriefing, createBriefing, getProjectContracts, createContract, getProjectApprovals, createApproval, getApprovalComments, createComment } from "./db";
+import { invokeLLM } from "./_core/llm";
 
 export const appRouter = router({
   system: systemRouter,
@@ -49,6 +50,27 @@ export const appRouter = router({
       budget: z.string().optional(),
       generatedContent: z.string().optional(),
     })).mutation(({ input }) => createBriefing(input)),
+    generateWithAI: protectedProcedure.input(z.object({
+      projectId: z.number(),
+      objective: z.string(),
+      targetAudience: z.string(),
+      references: z.string(),
+      deliverables: z.string(),
+      timeline: z.string(),
+      budget: z.string(),
+    })).mutation(async ({ input }) => {
+      const prompt = `Gere um briefing profissional em Markdown. Objetivo: ${input.objective}, Publico: ${input.targetAudience}, Referencias: ${input.references}, Entregaveis: ${input.deliverables}, Prazo: ${input.timeline}, Orcamento: ${input.budget}`;
+      const response = await invokeLLM({
+        messages: [
+          { role: "system", content: "Voce eh especialista em gestao de projetos criativos." },
+          { role: "user", content: prompt }
+        ],
+      });
+      const content = response.choices[0]?.message?.content;
+      const generatedContent = typeof content === 'string' ? content : "";
+      const result = await createBriefing({ ...input, generatedContent });
+      return { success: true, generatedContent, result };
+    }),
   }),
 
   contracts: router({

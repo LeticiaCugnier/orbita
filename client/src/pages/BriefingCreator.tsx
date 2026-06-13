@@ -35,6 +35,7 @@ export default function BriefingCreator({ projectId }: { projectId: number }) {
   const [isGenerating, setIsGenerating] = useState(false);
 
   const createBriefingMutation = trpc.briefings.create.useMutation();
+  const generateAIMutation = trpc.briefings.generateWithAI.useMutation();
 
   const steps = [
     {
@@ -86,9 +87,7 @@ export default function BriefingCreator({ projectId }: { projectId: number }) {
   const handleGenerateBriefing = async () => {
     setIsGenerating(true);
     try {
-      // Aqui você integraria com a IA para gerar o briefing
-      // Por enquanto, vamos criar um briefing com os dados fornecidos
-      const result = await createBriefingMutation.mutateAsync({
+      const result = await generateAIMutation.mutateAsync({
         projectId: formData.projectId,
         objective: formData.objective,
         targetAudience: formData.targetAudience,
@@ -96,12 +95,11 @@ export default function BriefingCreator({ projectId }: { projectId: number }) {
         deliverables: formData.deliverables,
         timeline: formData.timeline,
         budget: formData.budget,
-        generatedContent: generateBriefingContent(formData),
       });
 
-      setGeneratedContent(generateBriefingContent(formData));
+      setGeneratedContent(result.generatedContent);
     } catch (error) {
-      console.error("Erro ao gerar briefing:", error);
+      console.error("Erro ao gerar briefing com IA:", error);
     } finally {
       setIsGenerating(false);
     }

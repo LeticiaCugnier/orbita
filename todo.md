@@ -17,7 +17,7 @@
 ## Fase 3: Criador de Briefings com IA
 - [x] Criar schema de banco de dados para briefings
 - [x] Implementar fluxo guiado de perguntas (objetivo, público-alvo, referências, prazo, entregáveis)
-- [ ] Integrar LLM para sugestões e preenchimento automático
+- [x] Integrar LLM para sugestões e preenchimento automático
 - [x] Implementar geração de documento profissional formatado
 - [x] Criar tela de visualização e edição do briefing gerado
 
