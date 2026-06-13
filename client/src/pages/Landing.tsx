@@ -1,202 +1,195 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useEffect, useState } from "react";
+import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
-import { Zap, Users, FileText, Clock, Lock, Sparkles } from "lucide-react";
+import { useLocation } from "wouter";
+import { Button } from "@/components/ui/button";
+import { LogOut } from "lucide-react";
+
+interface OrbitalItem {
+  id: string;
+  label: string;
+  angle: number;
+  path: string;
+  icon: string;
+}
+
+const orbitalItems: OrbitalItem[] = [
+  { id: "dashboard", label: "Dashboard", angle: 0, path: "/", icon: "📊" },
+  { id: "projects", label: "Projetos", angle: 60, path: "/projects", icon: "📁" },
+  { id: "briefing", label: "Briefing", angle: 120, path: "/briefing", icon: "✍️" },
+  { id: "budgets", label: "Orçamentos", angle: 180, path: "/budgets", icon: "💰" },
+  { id: "contracts", label: "Contratos", angle: 240, path: "/contracts", icon: "📜" },
+  { id: "client-area", label: "Área do Cliente", angle: 300, path: "/client-area", icon: "👥" },
+];
+
+const ORBIT_RADIUS = 200;
+const CENTER_SIZE = 120;
+const ITEM_SIZE = 80;
 
 export default function Landing() {
+  const { user, isAuthenticated, logout } = useAuth();
+  const [, navigate] = useLocation();
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      // Auto-redirect to dashboard after login
+      setTimeout(() => navigate("/"), 500);
+    }
+  }, [isAuthenticated, navigate]);
+
+  const handleItemClick = (item: OrbitalItem) => {
+    if (isAuthenticated) {
+      navigate(item.path);
+    }
+  };
+
+  const handleLogout = () => {
+    logout();
+  };
+
+  const calculatePosition = (angle: number) => {
+    const rad = (angle * Math.PI) / 180;
+    const x = Math.cos(rad) * ORBIT_RADIUS;
+    const y = Math.sin(rad) * ORBIT_RADIUS;
+    return { x, y };
+  };
+
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-background/80 backdrop-blur-md border-b border-border z-50">
-        <div className="container flex items-center justify-between h-16">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-accent to-secondary flex items-center justify-center">
-              <span className="text-accent-foreground font-bold text-sm">O</span>
+    <div className="min-h-screen bg-gradient-to-br from-[#303633] via-[#1a1d1b] to-[#0f1110] flex items-center justify-center p-4 overflow-hidden">
+      {/* Background orbital animation */}
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 border border-[#8EE8CB] rounded-full animate-spin" style={{ animationDuration: "20s" }}></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 border border-[#7EA2A4] rounded-full animate-spin" style={{ animationDuration: "30s", animationDirection: "reverse" }}></div>
+      </div>
+
+      {/* Main orbital container */}
+      <div className="relative w-full max-w-2xl aspect-square flex items-center justify-center">
+        {/* Orbital rings */}
+        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 600 600">
+          {/* Outer rings */}
+          <circle cx="300" cy="300" r="250" fill="none" stroke="#8EE8CB" strokeWidth="1" opacity="0.2" />
+          <circle cx="300" cy="300" r="220" fill="none" stroke="#7EA2A4" strokeWidth="1" opacity="0.15" />
+          <circle cx="300" cy="300" r="190" fill="none" stroke="#9C7A97" strokeWidth="1" opacity="0.1" />
+
+          {/* Connection lines from center to orbital items */}
+          {orbitalItems.map((item) => {
+            const pos = calculatePosition(item.angle);
+            const x = 300 + (pos.x / ORBIT_RADIUS) * 200;
+            const y = 300 + (pos.y / ORBIT_RADIUS) * 200;
+            return (
+              <line
+                key={`line-${item.id}`}
+                x1="300"
+                y1="300"
+                x2={x}
+                y2={y}
+                stroke={isAuthenticated ? "#8EE8CB" : "#7EA2A4"}
+                strokeWidth="1"
+                opacity={isAuthenticated ? "0.4" : "0.2"}
+              />
+            );
+          })}
+        </svg>
+
+        {/* Orbital items */}
+        {orbitalItems.map((item) => {
+          const pos = calculatePosition(item.angle);
+          const isDisabled = !isAuthenticated;
+          const isHovered = hoveredItem === item.id;
+
+          return (
+            <div
+              key={item.id}
+              className="absolute transition-all duration-300"
+              style={{
+                transform: `translate(calc(-50% + ${pos.x}px), calc(-50% + ${pos.y}px))`,
+              }}
+            >
+              <button
+                onClick={() => handleItemClick(item)}
+                disabled={isDisabled}
+                className={`relative w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold transition-all duration-300 ${
+                  isDisabled
+                    ? "bg-[#7EA2A4]/20 border-2 border-[#7EA2A4]/40 cursor-not-allowed opacity-50"
+                    : isHovered
+                      ? "bg-[#8EE8CB] border-2 border-[#8EE8CB] shadow-lg shadow-[#8EE8CB]/50 scale-110"
+                      : "bg-[#9C7A97]/30 border-2 border-[#8EE8CB] hover:border-[#8EE8CB] shadow-lg shadow-[#9C7A97]/20"
+                }`}
+                onMouseEnter={() => !isDisabled && setHoveredItem(item.id)}
+                onMouseLeave={() => setHoveredItem(null)}
+                title={item.label}
+              >
+                {item.icon}
+              </button>
+
+              {/* Label */}
+              <div className="absolute top-full mt-3 whitespace-nowrap text-center pointer-events-none">
+                <p className={`text-xs font-medium transition-colors ${isDisabled ? "text-[#7EA2A4]/50" : "text-[#8EE8CB]"}`}>
+                  {item.label}
+                </p>
+              </div>
             </div>
-            <span className="text-xl font-bold font-['Space_Grotesk']">Orbita</span>
-          </div>
-          <Button asChild>
-            <a href={getLoginUrl()}>Entrar</a>
-          </Button>
-        </div>
-      </nav>
+          );
+        })}
 
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4">
-        <div className="container max-w-4xl mx-auto text-center">
-          <div className="mb-8 inline-block">
-            <div className="px-4 py-2 rounded-full bg-accent/10 border border-accent/30 text-sm font-medium text-accent">
-              ✨ A plataforma para profissionais criativos
+        {/* Center circle - Login/Welcome */}
+        <div className="relative z-10 flex flex-col items-center justify-center">
+          <div
+            className={`relative w-32 h-32 rounded-full flex flex-col items-center justify-center transition-all duration-500 ${
+              isAuthenticated
+                ? "bg-gradient-to-br from-[#8EE8CB] to-[#7EA2A4] shadow-2xl shadow-[#8EE8CB]/50"
+                : "bg-gradient-to-br from-[#9C7A97] to-[#8B8DA7] shadow-2xl shadow-[#9C7A97]/50 hover:shadow-2xl hover:shadow-[#8EE8CB]/50"
+            }`}
+          >
+            {/* Animated border */}
+            <div className="absolute inset-0 rounded-full border-2 border-[#FFF2B2] opacity-30 animate-pulse"></div>
+
+            {/* Content */}
+            <div className="text-center z-10">
+              {isAuthenticated ? (
+                <>
+                  <p className="text-[#303633] font-bold text-lg">Bem-vindo!</p>
+                  <p className="text-[#303633] text-sm font-semibold mt-1">{user?.name || "Designer"}</p>
+                  <p className="text-[#303633]/70 text-xs mt-2">Clique em qualquer órbita</p>
+                </>
+              ) : (
+                <>
+                  <p className="text-[#303633] font-bold text-xl">Orbita</p>
+                  <p className="text-[#303633]/80 text-xs mt-2">Gestão para Criativos</p>
+                </>
+              )}
             </div>
           </div>
 
-          <h1 className="text-5xl md:text-6xl font-bold font-['Space_Grotesk'] mb-6 leading-tight">
-            Organize o caos criativo com{" "}
-            <span className="bg-gradient-to-r from-accent via-secondary to-accent bg-clip-text text-transparent">
-              Orbita
-            </span>
-          </h1>
-
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            A plataforma SaaS moderna que centraliza gestão de projetos, briefings, contratos e aprovações. 
-            Tudo em um único lugar para designers, ilustradores e profissionais criativos.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Button size="lg" asChild>
-              <a href={getLoginUrl()}>Começar Agora</a>
-            </Button>
-            <Button size="lg" variant="outline">
-              Conhecer Recursos
-            </Button>
-          </div>
-
-          {/* Decorative Element */}
-          <div className="relative h-64 flex items-center justify-center opacity-30">
-            <div className="absolute w-48 h-48 rounded-full border border-accent/50"></div>
-            <div className="absolute w-32 h-32 rounded-full border border-secondary/50 orbit-animation"></div>
-            <div className="absolute w-16 h-16 rounded-full bg-gradient-to-br from-accent to-secondary"></div>
+          {/* Action button */}
+          <div className="mt-8">
+            {isAuthenticated ? (
+              <Button
+                onClick={handleLogout}
+                variant="outline"
+                className="gap-2 border-[#8EE8CB] text-[#8EE8CB] hover:bg-[#8EE8CB]/10"
+              >
+                <LogOut className="w-4 h-4" />
+                Sair
+              </Button>
+            ) : (
+              <a href={getLoginUrl()}>
+                <Button className="gap-2 bg-[#8EE8CB] text-[#303633] hover:bg-[#7EA2A4] font-bold px-8">
+                  Entrar / Cadastrar
+                </Button>
+              </a>
+            )}
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* Features Section */}
-      <section className="py-20 px-4 bg-card/50">
-        <div className="container max-w-5xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold font-['Space_Grotesk'] mb-4">Funcionalidades Principais</h2>
-            <p className="text-lg text-muted-foreground">Tudo que você precisa para gerenciar seus projetos criativos</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            <Card className="border-border/50 hover:border-accent/50 transition-colors">
-              <CardHeader>
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2 rounded-lg bg-accent/10">
-                    <Zap className="w-5 h-5 text-accent" />
-                  </div>
-                  <CardTitle>Dashboard Inteligente</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Visão geral completa de seus projetos em andamento, pendências, próximas entregas e status dos jobs.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card className="border-border/50 hover:border-accent/50 transition-colors">
-              <CardHeader>
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2 rounded-lg bg-secondary/10">
-                    <FileText className="w-5 h-5 text-secondary" />
-                  </div>
-                  <CardTitle>Criador de Briefings com IA</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Fluxo guiado com IA que gera automaticamente briefings profissionais formatados.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card className="border-border/50 hover:border-accent/50 transition-colors">
-              <CardHeader>
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2 rounded-lg bg-accent/10">
-                    <Clock className="w-5 h-5 text-accent" />
-                  </div>
-                  <CardTitle>Gestão de Etapas</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Organize projetos em etapas com visualização Kanban ou Timeline. De briefing até entrega.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card className="border-border/50 hover:border-accent/50 transition-colors">
-              <CardHeader>
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2 rounded-lg bg-secondary/10">
-                    <Users className="w-5 h-5 text-secondary" />
-                  </div>
-                  <CardTitle>Área do Cliente</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Compartilhe peças, receba aprovações e gerencie comentários com seus clientes em um único espaço.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card className="border-border/50 hover:border-accent/50 transition-colors">
-              <CardHeader>
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2 rounded-lg bg-accent/10">
-                    <Lock className="w-5 h-5 text-accent" />
-                  </div>
-                  <CardTitle>Gestão de Contratos</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Modelos prontos, personalização rápida e histórico completo de documentos.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card className="border-border/50 hover:border-accent/50 transition-colors">
-              <CardHeader>
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2 rounded-lg bg-secondary/10">
-                    <Sparkles className="w-5 h-5 text-secondary" />
-                  </div>
-                  <CardTitle>Upload Seguro</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Armazenamento seguro de arquivos com acesso controlado por link para imagens, PDFs e mockups.
-                </CardDescription>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 px-4">
-        <div className="container max-w-3xl mx-auto text-center">
-          <h2 className="text-4xl font-bold font-['Space_Grotesk'] mb-6">
-            Pronto para transformar sua gestão criativa?
-          </h2>
-          <p className="text-lg text-muted-foreground mb-8">
-            Junte-se a centenas de profissionais criativos que já usam Orbita para organizar seus projetos.
-          </p>
-          <Button size="lg" asChild className="text-lg">
-            <a href={getLoginUrl()}>Começar Gratuitamente</a>
-          </Button>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="border-t border-border py-8 px-4">
-        <div className="container flex flex-col md:flex-row items-center justify-between">
-          <div className="flex items-center gap-2 mb-4 md:mb-0">
-            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-accent to-secondary flex items-center justify-center">
-              <span className="text-accent-foreground font-bold text-xs">O</span>
-            </div>
-            <span className="font-bold font-['Space_Grotesk']">Orbita</span>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            © 2026 Orbita. Gestão inteligente para profissionais criativos.
-          </p>
-        </div>
-      </footer>
+      {/* Branding */}
+      <div className="absolute bottom-8 left-8 right-8 text-center">
+        <p className="text-[#8EE8CB]/60 text-sm">
+          A plataforma de gestão inteligente para profissionais criativos
+        </p>
+      </div>
     </div>
   );
 }

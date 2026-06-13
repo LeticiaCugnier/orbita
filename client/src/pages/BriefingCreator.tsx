@@ -1,4 +1,5 @@
 import { useState } from "react";
+import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -134,7 +135,8 @@ ${data.budget}
 
   if (generatedContent) {
     return (
-      <div className="space-y-6">
+      <DashboardLayout>
+        <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold font-['Space_Grotesk']">Briefing Gerado</h2>
           <Badge className="flex items-center gap-2">
@@ -165,6 +167,7 @@ ${data.budget}
           </CardContent>
         </Card>
       </div>
+      </DashboardLayout>
     );
   }
 
@@ -173,9 +176,10 @@ ${data.budget}
   const isLastStep = step === steps.length - 1;
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold font-['Space_Grotesk']">Criador de Briefings com IA</h2>
+    <DashboardLayout>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold font-['Space_Grotesk']">Criador de Briefings com IA</h2>
         <Badge variant="secondary">Passo {step + 1} de {steps.length}</Badge>
       </div>
 
@@ -262,5 +266,6 @@ ${data.budget}
         ))}
       </div>
     </div>
+    </DashboardLayout>
   );
 }

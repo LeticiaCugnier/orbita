@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, GripVertical, Calendar, Users } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import DashboardLayout from "@/components/DashboardLayout";
 
 const statusColors: Record<string, string> = {
   briefing: "bg-blue-500/10 text-blue-500 border-blue-500/30",
@@ -37,7 +38,8 @@ export default function ProjectsManagement() {
   };
 
   return (
-    <div className="space-y-6">
+    <DashboardLayout>
+      <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold font-['Space_Grotesk']">Gestão de Projetos</h1>
@@ -157,5 +159,6 @@ export default function ProjectsManagement() {
         </TabsContent>
       </Tabs>
     </div>
+    </DashboardLayout>
   );
 }

@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, FileText, Download, Eye } from "lucide-react";
+import DashboardLayout from "@/components/DashboardLayout";
 import LegalAIAssistant from "@/components/LegalAIAssistant";
 
 const contractTemplates = [
@@ -81,11 +82,13 @@ export default function ContractsManagement() {
   const [activeTab, setActiveTab] = useState("templates");
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold font-['Space_Grotesk']">Gestão de Contratos</h1>
-          <p className="text-muted-foreground mt-1">Crie, personalize e gerencie seus contratos</p>
+    <DashboardLayout>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold font-['Space_Grotesk']">Gestão de Contratos</h1>
+            <p className="text-muted-foreground mt-1">Crie, personalize e gerencie seus contratos</p>
+          </div>
         </div>
         <div className="flex gap-2">
           <LegalAIAssistant contractContent="Contrato de exemplo..." />
@@ -96,20 +99,21 @@ export default function ContractsManagement() {
         </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
-          <TabsTrigger value="templates">Modelos</TabsTrigger>
-          <TabsTrigger value="contracts">Meus Contratos</TabsTrigger>
-        </TabsList>
+      <div className="space-y-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList>
+            <TabsTrigger value="templates">Modelos</TabsTrigger>
+            <TabsTrigger value="contracts">Meus Contratos</TabsTrigger>
+          </TabsList>
 
-        <TabsContent value="templates" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {contractTemplates.map((template) => (
-              <Card key={template.id} className="border-border/50 hover:border-accent/50 transition-colors">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <CardTitle className="flex items-center gap-2">
+          <TabsContent value="templates" className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {contractTemplates.map((template) => (
+                <Card key={template.id} className="border-border/50 hover:border-accent/50 transition-colors">
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <CardTitle className="flex items-center gap-2">
                         <FileText className="w-5 h-5 text-accent" />
                         {template.name}
                       </CardTitle>
@@ -176,6 +180,7 @@ export default function ContractsManagement() {
           </div>
         </TabsContent>
       </Tabs>
-    </div>
+      </div>
+    </DashboardLayout>
   );
 }
