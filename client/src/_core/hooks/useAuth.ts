@@ -16,13 +16,11 @@ export function useAuth(options?: UseAuthOptions) {
   const meQuery = trpc.auth.me.useQuery(undefined, {
     retry: false,
     refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 5, // 5 minutos
-    gcTime: 1000 * 60 * 10, // 10 minutos
   });
 
   const logoutMutation = trpc.auth.logout.useMutation({
     onSuccess: () => {
-      utils.auth.me.setData(undefined, undefined);
+      utils.auth.me.setData(undefined, null);
     },
   });
 
@@ -38,25 +36,21 @@ export function useAuth(options?: UseAuthOptions) {
       }
       throw error;
     } finally {
-      utils.auth.me.setData(undefined, undefined);
+      utils.auth.me.setData(undefined, null);
       await utils.auth.me.invalidate();
     }
   }, [logoutMutation, utils]);
 
   const state = useMemo(() => {
-    // Se há erro, considerar como não autenticado
-    const hasError = Boolean(meQuery.error);
-    const userData = hasError ? null : meQuery.data;
-    
     localStorage.setItem(
       "manus-runtime-user-info",
-      JSON.stringify(userData)
+      JSON.stringify(meQuery.data)
     );
     return {
-      user: userData ?? null,
+      user: meQuery.data ?? null,
       loading: meQuery.isLoading || logoutMutation.isPending,
       error: meQuery.error ?? logoutMutation.error ?? null,
-      isAuthenticated: Boolean(userData),
+      isAuthenticated: Boolean(meQuery.data),
     };
   }, [
     meQuery.data,
@@ -73,7 +67,7 @@ export function useAuth(options?: UseAuthOptions) {
     if (typeof window === "undefined") return;
     if (window.location.pathname === redirectPath) return;
 
-    window.location.href = redirectPath;
+    window.location.href = redirectPath
   }, [
     redirectOnUnauthenticated,
     redirectPath,

@@ -15,7 +15,7 @@ import ClientArea from "./pages/ClientArea";
 import BudgetsManagement from "./pages/BudgetsManagement";
 
 function Router() {
-  const { isAuthenticated, loading, error } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
 
   if (loading) {
     return (
@@ -25,7 +25,7 @@ function Router() {
     );
   }
 
-  if (isAuthenticated && !error) {
+  if (isAuthenticated) {
     return (
       <Switch>
         <Route path="/" component={Home} />
