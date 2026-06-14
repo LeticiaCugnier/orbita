@@ -21,14 +21,15 @@ import {
 } from "@/components/ui/sidebar";
 import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users, FileText, CheckSquare, Briefcase, Sparkles, DollarSign } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, Users, FileText, CheckSquare, Briefcase, Sparkles, DollarSign, Orbit } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
 
 const menuItems = [
-  { icon: LayoutDashboard, label: "Dashboard", path: "/" },
+  { icon: LayoutDashboard, label: "Início", path: "/" },
+  { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
   { icon: Briefcase, label: "Projetos", path: "/projects" },
   { icon: Sparkles, label: "Briefings", path: "/briefing" },
   { icon: DollarSign, label: "Orçamentos", path: "/budgets" },
