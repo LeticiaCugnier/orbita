@@ -16,7 +16,7 @@ import BudgetsManagement from "./pages/BudgetsManagement";
 import Inicio from "./pages/Inicio";
 
 function Router() {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, error } = useAuth();
 
   if (loading) {
     return (
@@ -26,7 +26,7 @@ function Router() {
     );
   }
 
-  if (isAuthenticated) {
+  if (isAuthenticated && !error) {
     return (
       <Switch>
         <Route path="/" component={Inicio} />
