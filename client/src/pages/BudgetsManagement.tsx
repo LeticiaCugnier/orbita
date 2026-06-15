@@ -89,6 +89,23 @@ function BudgetsManagementContent() {
   ];
 
   const handleCreateBudget = async () => {
+    if (!formData.clientName.trim()) {
+      toast.error("Por favor, preencha o nome do cliente");
+      return;
+    }
+    if (!formData.projectTitle.trim()) {
+      toast.error("Por favor, preencha o título do projeto");
+      return;
+    }
+    if (!formData.amount.trim()) {
+      toast.error("Por favor, preencha o valor do orçamento");
+      return;
+    }
+    if (!formData.validUntil) {
+      toast.error("Por favor, selecione a data de validade");
+      return;
+    }
+
     try {
       await createBudgetMutation.mutateAsync({
         clientName: formData.clientName,
@@ -100,6 +117,7 @@ function BudgetsManagementContent() {
         items: formData.items,
         validUntil: formData.validUntil ? new Date(formData.validUntil) : undefined,
       });
+      toast.success(`Orçamento "${formData.projectTitle}" criado com sucesso!`);
       setIsDialogOpen(false);
       setFormData({
         clientName: "",
@@ -113,6 +131,7 @@ function BudgetsManagementContent() {
       });
     } catch (error) {
       console.error("Erro ao criar orçamento:", error);
+      toast.error("Erro ao criar o orçamento. Tente novamente.");
     }
   };
 

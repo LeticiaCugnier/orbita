@@ -91,3 +91,11 @@
 - [x] Implementar handler para botão "Finalizar" em Orçamentos
 - [x] Adicionar notificações (toasts) para feedback visual de ações
 - [x] Testar todos os botões em diferentes estados de orçamento
+
+
+## Fase 13: Correção do Formulário de Novo Orçamento
+- [x] Adicionar validação de campos obrigatórios
+- [x] Implementar notificações de erro para campos vazios
+- [x] Adicionar confirmação de sucesso ao criar orçamento
+- [x] Limpar formulário automaticamente após criação
+- [x] Testar fluxo completo de criação
