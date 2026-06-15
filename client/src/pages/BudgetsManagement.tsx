@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, Eye, Check, X, ArrowRight } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import DashboardLayout from "@/components/DashboardLayout";
+import { toast } from "sonner";
 
 interface BudgetFormData {
   clientName: string;
@@ -121,8 +122,15 @@ function BudgetsManagementContent() {
         id: budgetId,
         status: newStatus as any,
       });
+      const statusMessages: Record<string, string> = {
+        sent: "Orçamento enviado com sucesso!",
+        approved: "Orçamento aprovado com sucesso!",
+        rejected: "Orçamento rejeitado.",
+      };
+      toast.success(statusMessages[newStatus] || "Status atualizado com sucesso!");
     } catch (error) {
       console.error("Erro ao atualizar status:", error);
+      toast.error("Erro ao atualizar o status do orçamento.");
     }
   };
 
@@ -134,8 +142,17 @@ function BudgetsManagementContent() {
         clientName,
         clientEmail: "",
       });
+      toast.success(`Orçamento "${projectTitle}" finalizado com sucesso!`);
     } catch (error) {
       console.error("Erro ao finalizar orçamento:", error);
+      toast.error("Erro ao finalizar o orçamento.");
+    }
+  };
+
+  const handleVisualize = (budgetId: number) => {
+    const budget = mockBudgets.find((b) => b.id === budgetId);
+    if (budget) {
+      toast.info(`Visualizando: ${budget.projectTitle} - ${budget.clientName}`);
     }
   };
 
@@ -202,7 +219,7 @@ function BudgetsManagementContent() {
       </div>
 
       <div className="flex gap-2">
-        <Button size="sm" variant="outline" className="flex-1">
+        <Button size="sm" variant="outline" className="flex-1" onClick={() => handleVisualize(budget.id)}>
           <Eye className="w-4 h-4 mr-2" />
           Visualizar
         </Button>

@@ -81,3 +81,13 @@
 - [x] Adicionar handlers aos botões "Novo Contrato" em Contratos
 - [x] Adicionar handlers aos botões "Baixar PDF" em Briefing
 - [x] Testar navegação em todas as páginas
+
+
+## Fase 12: Botões Funcionais em Orçamentos
+- [x] Implementar handler para botão "Visualizar" em Orçamentos
+- [x] Implementar handler para botão "Aprovar" em Orçamentos
+- [x] Implementar handler para botão "Rejeitar" em Orçamentos
+- [x] Implementar handler para botão "Enviar" em Orçamentos
+- [x] Implementar handler para botão "Finalizar" em Orçamentos
+- [x] Adicionar notificações (toasts) para feedback visual de ações
+- [x] Testar todos os botões em diferentes estados de orçamento
