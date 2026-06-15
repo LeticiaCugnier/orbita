@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, MessageSquare, Download, CheckCircle2, XCircle, AlertCircle, Upload } from "lucide-react";
+import DashboardLayout from "@/components/DashboardLayout";
 
 const mockApprovals = [
   {
@@ -57,7 +58,7 @@ const statusIcons: Record<string, React.ReactNode> = {
   revision_requested: <AlertCircle className="w-4 h-4" />,
 };
 
-export default function ClientArea() {
+function ClientAreaContent() {
   const [selectedApproval, setSelectedApproval] = useState<typeof mockApprovals[0] | null>(null);
   const [comment, setComment] = useState("");
 
@@ -207,5 +208,13 @@ export default function ClientArea() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ClientArea() {
+  return (
+    <DashboardLayout>
+      <ClientAreaContent />
+    </DashboardLayout>
   );
 }

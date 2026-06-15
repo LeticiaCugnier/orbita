@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Spinner } from "@/components/ui/spinner";
 import { ChevronRight, ChevronLeft, Sparkles, CheckCircle2 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import { useLocation } from "wouter";
 
 interface BriefingFormData {
   projectId: number;
@@ -22,6 +23,7 @@ interface BriefingFormData {
 }
 
 export default function BriefingCreator({ projectId }: { projectId: number }) {
+  const [, setLocation] = useLocation();
   const [step, setStep] = useState(0);
   const [formData, setFormData] = useState<BriefingFormData>({
     projectId,
@@ -156,7 +158,7 @@ ${data.budget}
             </div>
 
             <div className="flex gap-3">
-              <Button className="flex-1">
+              <Button className="flex-1" onClick={() => setLocation("/briefing")}>
                 <Sparkles className="w-4 h-4 mr-2" />
                 Baixar PDF
               </Button>

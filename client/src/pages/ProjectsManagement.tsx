@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, GripVertical, Calendar, Users } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import DashboardLayout from "@/components/DashboardLayout";
+import { useLocation } from "wouter";
 
 const statusColors: Record<string, string> = {
   briefing: "bg-blue-500/10 text-blue-500 border-blue-500/30",
@@ -29,6 +30,7 @@ const statusLabels: Record<string, string> = {
 
 export default function ProjectsManagement() {
   const [viewMode, setViewMode] = useState<"kanban" | "list">("kanban");
+  const [, setLocation] = useLocation();
   const { data: projects = [] } = trpc.projects.list.useQuery();
 
   const statuses = ["briefing", "research", "creation", "approval", "adjustments", "finalization", "delivery"] as const;
@@ -45,7 +47,7 @@ export default function ProjectsManagement() {
           <h1 className="text-3xl font-bold font-['Space_Grotesk']">Gestão de Projetos</h1>
           <p className="text-muted-foreground mt-1">Organize seus projetos em etapas</p>
         </div>
-        <Button size="lg" className="gap-2">
+        <Button size="lg" className="gap-2" onClick={() => setLocation("/projects")}>
           <Plus className="w-4 h-4" />
           Novo Projeto
         </Button>

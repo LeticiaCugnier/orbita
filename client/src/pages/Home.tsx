@@ -18,13 +18,20 @@ import {
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 
+import { useLocation } from "wouter";
+
 export default function Home() {
   const { logout } = useAuth();
+  const [, setLocation] = useLocation();
   const logoutMutation = trpc.auth.logout.useMutation();
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
     logout();
+  };
+
+  const handleNewProject = () => {
+    setLocation("/projects");
   };
 
   // Dados mock para demonstração
@@ -56,7 +63,7 @@ export default function Home() {
             <p className="text-muted-foreground mt-1">Bem-vindo de volta! Aqui está sua visão geral de projetos.</p>
           </div>
           <div className="flex gap-2 w-full md:w-auto">
-            <Button size="lg" className="gap-2 flex-1 md:flex-none">
+            <Button size="lg" className="gap-2 flex-1 md:flex-none" onClick={handleNewProject}>
               <Plus className="w-4 h-4" />
               Novo Projeto
             </Button>
@@ -116,7 +123,7 @@ export default function Home() {
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-bold font-['Space_Grotesk']">Projetos em Andamento</h2>
-              <Button variant="ghost" size="sm">Ver Todos</Button>
+              <Button variant="ghost" size="sm" onClick={() => setLocation("/projects")}>Ver Todos</Button>
             </div>
 
             <div className="space-y-3">

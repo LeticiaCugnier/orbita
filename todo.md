@@ -70,3 +70,14 @@
 - [x] Adicionar overlay escuro para melhorar legibilidade do conteúdo
 - [x] Aplicar estilos CSS para posicionamento e cobertura total da tela
 - [x] Testar em múltiplas páginas (Inicio, Dashboard, Projetos)
+
+## Fase 11: Sidebar de Navegação e Botões Funcionais
+- [x] Remover botão "Ir para Dashboard" da página de Início
+- [x] Adicionar DashboardLayout à página de Início com sidebar
+- [x] Adicionar DashboardLayout à página de Orçamentos
+- [x] Adicionar DashboardLayout à página de Área do Cliente
+- [x] Adicionar handlers aos botões "Novo Projeto" no Dashboard
+- [x] Adicionar handlers aos botões "Novo Projeto" em Projetos
+- [x] Adicionar handlers aos botões "Novo Contrato" em Contratos
+- [x] Adicionar handlers aos botões "Baixar PDF" em Briefing
+- [x] Testar navegação em todas as páginas

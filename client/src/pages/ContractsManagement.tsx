@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, FileText, Download, Eye } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
 import LegalAIAssistant from "@/components/LegalAIAssistant";
+import { useLocation } from "wouter";
 
 const contractTemplates = [
   {
@@ -80,6 +81,7 @@ const statusLabels: Record<string, string> = {
 
 export default function ContractsManagement() {
   const [activeTab, setActiveTab] = useState("templates");
+  const [, setLocation] = useLocation();
 
   return (
     <DashboardLayout>
@@ -92,7 +94,7 @@ export default function ContractsManagement() {
         </div>
         <div className="flex gap-2">
           <LegalAIAssistant contractContent="Contrato de exemplo..." />
-          <Button size="lg" className="gap-2">
+          <Button size="lg" className="gap-2" onClick={() => setLocation("/contracts")}>
             <Plus className="w-4 h-4" />
             Novo Contrato
           </Button>

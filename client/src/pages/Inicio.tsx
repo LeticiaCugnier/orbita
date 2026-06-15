@@ -1,6 +1,6 @@
 import { useLocation } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { Button } from "@/components/ui/button";
+import DashboardLayout from "@/components/DashboardLayout";
 
 interface OrbitalItem {
   id: string;
@@ -12,7 +12,7 @@ interface OrbitalItem {
   color: string;
 }
 
-export default function Inicio() {
+function InicioContent() {
   const [, setLocation] = useLocation();
   const { user } = useAuth();
 
@@ -137,15 +137,16 @@ export default function Inicio() {
 
       {/* Instruções */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center">
-        <p className="text-sm text-gray-400 mb-4">Clique em qualquer círculo para navegar</p>
-        <Button
-          onClick={() => setLocation("/dashboard")}
-          variant="outline"
-          className="border-[#8EE8CB] text-[#8EE8CB] hover:bg-[#8EE8CB]/10"
-        >
-          Ir para Dashboard
-        </Button>
+        <p className="text-sm text-gray-400">Clique em qualquer círculo para navegar</p>
       </div>
     </div>
+  );
+}
+
+export default function Inicio() {
+  return (
+    <DashboardLayout>
+      <InicioContent />
+    </DashboardLayout>
   );
 }

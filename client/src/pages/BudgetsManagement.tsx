@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, Eye, Check, X, ArrowRight } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import DashboardLayout from "@/components/DashboardLayout";
 
 interface BudgetFormData {
   clientName: string;
@@ -19,7 +20,7 @@ interface BudgetFormData {
   validUntil: string;
 }
 
-export default function BudgetsManagement() {
+function BudgetsManagementContent() {
   const [activeTab, setActiveTab] = useState("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState<BudgetFormData>({
@@ -350,5 +351,13 @@ export default function BudgetsManagement() {
         </TabsContent>
       </Tabs>
     </div>
+  );
+}
+
+export default function BudgetsManagement() {
+  return (
+    <DashboardLayout>
+      <BudgetsManagementContent />
+    </DashboardLayout>
   );
 }
