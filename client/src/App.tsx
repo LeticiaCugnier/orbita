@@ -64,6 +64,20 @@ function App() {
         defaultTheme="dark"
         // switchable
       >
+        {/* Video Background */}
+        <div className="video-background">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-full object-cover"
+          >
+            <source src="/manus-storage/MOSHED-2026-6-14-12-26-37_e53708a1.webm" type="video/webm" />
+          </video>
+          <div className="video-background-overlay"></div>
+        </div>
+        
         <TooltipProvider>
           <Toaster />
           <Router />
