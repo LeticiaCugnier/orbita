@@ -99,3 +99,10 @@
 - [x] Adicionar confirmação de sucesso ao criar orçamento
 - [x] Limpar formulário automaticamente após criação
 - [x] Testar fluxo completo de criação
+
+
+## Fase 14: Vídeo de Fundo na Página Inicio
+- [x] Adicionar vídeo de fundo na página Inicio
+- [x] Aplicar overlay escuro para melhorar legibilidade
+- [x] Sincronizar vídeo com outras páginas
+- [x] Testar reprodução e loop do vídeo

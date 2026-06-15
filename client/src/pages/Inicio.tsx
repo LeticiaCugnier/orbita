@@ -30,12 +30,26 @@ function InicioContent() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-[#0f0f0f] via-[#1a1a1a] to-[#0f0f0f] flex items-center justify-center overflow-hidden relative p-4">
+    <div className="min-h-screen w-full flex items-center justify-center overflow-hidden relative p-4">
+      {/* Fundo com vídeo */}
+      <div className="absolute inset-0 z-0">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="w-full h-full object-cover"
+        >
+          <source src="/manus-storage/MOSHED-2026-6-14-12-26-37_e53708a1.webm" type="video/webm" />
+        </video>
+        <div className="absolute inset-0 bg-black/70"></div>
+      </div>
+      
       {/* Fundo com gradiente */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#8EE8CB]/5 via-transparent to-[#9C7A97]/5 pointer-events-none" />
 
       {/* Container da órbita */}
-      <div className="relative w-full max-w-2xl aspect-square">
+      <div className="relative w-full max-w-2xl aspect-square z-10">
         {/* SVG com órbitas */}
         <svg
           className="w-full h-full"
