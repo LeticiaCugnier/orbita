@@ -106,3 +106,10 @@
 - [x] Aplicar overlay escuro para melhorar legibilidade
 - [x] Sincronizar vídeo com outras páginas
 - [x] Testar reprodução e loop do vídeo
+
+
+## Fase 15: Correção de Layout em Gestão de Contratos
+- [x] Reorganizar botões na página de Gestão de Contratos
+- [x] Melhorar espaçamento entre "Assistente Jurídico" e "Novo Contrato"
+- [x] Alinhar botões no topo direito com o título
+- [x] Testar responsividade do novo layout

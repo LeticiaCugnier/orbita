@@ -91,13 +91,13 @@ export default function ContractsManagement() {
             <h1 className="text-3xl font-bold font-['Space_Grotesk']">Gestão de Contratos</h1>
             <p className="text-muted-foreground mt-1">Crie, personalize e gerencie seus contratos</p>
           </div>
-        </div>
-        <div className="flex gap-2">
-          <LegalAIAssistant contractContent="Contrato de exemplo..." />
-          <Button size="lg" className="gap-2" onClick={() => setLocation("/contracts")}>
-            <Plus className="w-4 h-4" />
-            Novo Contrato
-          </Button>
+          <div className="flex gap-4 items-center">
+            <LegalAIAssistant contractContent="Contrato de exemplo..." />
+            <Button size="lg" className="gap-2 whitespace-nowrap" onClick={() => setLocation("/contracts")}>
+              <Plus className="w-4 h-4" />
+              Novo Contrato
+            </Button>
+          </div>
         </div>
       </div>
 
