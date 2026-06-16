@@ -113,3 +113,11 @@
 - [x] Melhorar espaçamento entre "Assistente Jurídico" e "Novo Contrato"
 - [x] Alinhar botões no topo direito com o título
 - [x] Testar responsividade do novo layout
+
+
+## Fase 16: Melhorias na Navbar
+- [x] Mudar ícone de Início para casinha (Home icon)
+- [x] Adicionar toggle de tema Dark/Light
+- [x] Criar paleta de cores para tema Light
+- [x] Implementar persistência de tema no localStorage
+- [x] Testar alternância entre temas

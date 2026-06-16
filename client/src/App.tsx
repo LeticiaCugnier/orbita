@@ -62,7 +62,7 @@ function App() {
     <ErrorBoundary>
       <ThemeProvider
         defaultTheme="dark"
-        // switchable
+        switchable
       >
         {/* Video Background */}
         <div className="video-background">

@@ -21,14 +21,15 @@ import {
 } from "@/components/ui/sidebar";
 import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users, FileText, CheckSquare, Briefcase, Sparkles, DollarSign } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, Users, FileText, CheckSquare, Briefcase, Sparkles, DollarSign, Home, Moon, Sun } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const menuItems = [
-  { icon: LayoutDashboard, label: "Início", path: "/" },
+  { icon: Home, label: "Início", path: "/" },
   { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
   { icon: Briefcase, label: "Projetos", path: "/projects" },
   { icon: Sparkles, label: "Briefings", path: "/briefing" },
@@ -99,6 +100,31 @@ export default function DashboardLayout({
         {children}
       </DashboardLayoutContent>
     </SidebarProvider>
+  );
+}
+
+function ThemeToggleMenuItem() {
+  const { theme, toggleTheme, switchable } = useTheme();
+
+  if (!switchable || !toggleTheme) return null;
+
+  return (
+    <DropdownMenuItem
+      onClick={toggleTheme}
+      className="cursor-pointer"
+    >
+      {theme === "dark" ? (
+        <>
+          <Sun className="mr-2 h-4 w-4" />
+          <span>Tema Claro</span>
+        </>
+      ) : (
+        <>
+          <Moon className="mr-2 h-4 w-4" />
+          <span>Tema Escuro</span>
+        </>
+      )}
+    </DropdownMenuItem>
   );
 }
 
@@ -226,6 +252,7 @@ function DashboardLayoutContent({
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
+                <ThemeToggleMenuItem />
                 <DropdownMenuItem
                   onClick={logout}
                   className="cursor-pointer text-destructive focus:text-destructive"
