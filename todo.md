@@ -121,3 +121,13 @@
 - [x] Criar paleta de cores para tema Light
 - [x] Implementar persistência de tema no localStorage
 - [x] Testar alternância entre temas
+
+
+## Fase 17: Sino de Notificações
+- [x] Criar componente NotificationBell com categorias (aprovação, prazo, alerta)
+- [x] Implementar contador visual com badge
+- [x] Adicionar resumo de notificações pendentes
+- [x] Implementar marcar como lida/não lida
+- [x] Adicionar funcionalidade de deletar notificações
+- [x] Integrar sino na sidebar (desktop) e navbar mobile
+- [x] Testar interatividade do sino

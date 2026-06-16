@@ -27,6 +27,7 @@ import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
 import { useTheme } from "@/contexts/ThemeContext";
+import NotificationBell from "./NotificationBell";
 
 const menuItems = [
   { icon: Home, label: "Início", path: "/" },
@@ -232,7 +233,8 @@ function DashboardLayoutContent({
             </SidebarMenu>
           </SidebarContent>
 
-          <SidebarFooter className="p-3">
+          <SidebarFooter className="p-3 space-y-2">
+            <NotificationBell />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="flex items-center gap-3 rounded-lg px-1 py-1 hover:bg-accent/50 transition-colors w-full text-left group-data-[collapsible=icon]:justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-ring">
@@ -287,6 +289,7 @@ function DashboardLayoutContent({
                 </div>
               </div>
             </div>
+            <NotificationBell />
           </div>
         )}
         <main className="flex-1 p-8 lg:p-12">{children}</main>
