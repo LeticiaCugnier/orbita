@@ -129,6 +129,27 @@ function ThemeToggleMenuItem() {
   );
 }
 
+function ThemeToggleButton() {
+  const { theme, toggleTheme, switchable } = useTheme();
+
+  if (!switchable || !toggleTheme) return null;
+
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      className="h-9 w-9 rounded-lg hover:bg-accent/50"
+      onClick={toggleTheme}
+    >
+      {theme === "dark" ? (
+        <Sun className="h-4 w-4 text-muted-foreground" />
+      ) : (
+        <Moon className="h-4 w-4 text-muted-foreground" />
+      )}
+    </Button>
+  );
+}
+
 type DashboardLayoutContentProps = {
   children: React.ReactNode;
   setSidebarWidth: (width: number) => void;
@@ -233,8 +254,7 @@ function DashboardLayoutContent({
             </SidebarMenu>
           </SidebarContent>
 
-          <SidebarFooter className="p-3 space-y-2">
-            <NotificationBell />
+          <SidebarFooter className="p-3">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="flex items-center gap-3 rounded-lg px-1 py-1 hover:bg-accent/50 transition-colors w-full text-left group-data-[collapsible=icon]:justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-ring">
@@ -289,7 +309,10 @@ function DashboardLayoutContent({
                 </div>
               </div>
             </div>
-            <NotificationBell />
+            <div className="flex items-center gap-2">
+              <ThemeToggleButton />
+              <NotificationBell />
+            </div>
           </div>
         )}
         <main className="flex-1 p-8 lg:p-12">{children}</main>

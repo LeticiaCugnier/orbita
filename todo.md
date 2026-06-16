@@ -131,3 +131,11 @@
 - [x] Adicionar funcionalidade de deletar notificações
 - [x] Integrar sino na sidebar (desktop) e navbar mobile
 - [x] Testar interatividade do sino
+
+
+## Fase 18: Correções de Navbar e Tema
+- [x] Remover NotificationBell da sidebar
+- [x] Manter NotificationBell apenas na navbar mobile
+- [x] Corrigir toggle de tema Dark/Light
+- [x] Adicionar ThemeToggleButton visível na navbar
+- [x] Testar alternância de temas
