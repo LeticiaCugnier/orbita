@@ -148,3 +148,10 @@
 - [x] Incluir "Entregáveis" em cada serviço
 - [x] Manter funcionalidade de orçamento personalizado
 - [x] Organizar em abas: Meus Orçamentos, Tabela, Tipos, Status
+
+
+## Fase 20: Botão Solicitar nos Cards de Serviços
+- [x] Adicionar botão "Solicitar" em cada card de Tipos de Serviços
+- [x] Preencher automaticamente o formulário com dados do serviço
+- [x] Redirecionar para aba "Meus Orçamentos" com formulário aberto
+- [x] Mostrar notificação de sucesso ao clicar

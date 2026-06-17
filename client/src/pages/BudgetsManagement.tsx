@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Eye, Check, X, ArrowRight } from "lucide-react";
+import { Plus, Eye, Check, X, ArrowRight, ShoppingCart } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import DashboardLayout from "@/components/DashboardLayout";
 import { toast } from "sonner";
@@ -519,6 +519,20 @@ function BudgetsManagementContent() {
                   </ul>
                 </div>
               </div>
+              <Button className="w-full mt-4 bg-green-600 hover:bg-green-700" onClick={() => {
+                setFormData({
+                  ...formData,
+                  projectTitle: "Identidade Visual",
+                  description: "Desenvolvimento de identidade visual completa: logo, paleta de cores, tipografia e manual de marca.",
+                  items: "Logo e variações, Paleta de cores, Tipografia, Manual de marca",
+                });
+                setIsDialogOpen(true);
+                setActiveTab("all");
+                toast.success("Formulário preenchido com Identidade Visual");
+              }}>
+                <ShoppingCart className="w-4 h-4 mr-2" />
+                Solicitar
+              </Button>
             </Card>
 
             {/* Criação de Estampas */}
@@ -546,6 +560,20 @@ function BudgetsManagementContent() {
                   </ul>
                 </div>
               </div>
+              <Button className="w-full mt-4 bg-green-600 hover:bg-green-700" onClick={() => {
+                setFormData({
+                  ...formData,
+                  projectTitle: "Criação de Estampas",
+                  description: "Desenvolvimento de designs originais de estampas com variações de cores e testes de impressão.",
+                  items: "Designs originais, Variações de cores, Testes de impressão, Adaptações",
+                });
+                setIsDialogOpen(true);
+                setActiveTab("all");
+                toast.success("Formulário preenchido com Criação de Estampas");
+              }}>
+                <ShoppingCart className="w-4 h-4 mr-2" />
+                Solicitar
+              </Button>
             </Card>
 
             {/* Gestão de Redes Sociais */}
@@ -573,6 +601,20 @@ function BudgetsManagementContent() {
                   </ul>
                 </div>
               </div>
+              <Button className="w-full mt-4 bg-green-600 hover:bg-green-700" onClick={() => {
+                setFormData({
+                  ...formData,
+                  projectTitle: "Gestão de Redes Sociais",
+                  description: "Planejamento, criação e agendamento de conteúdo para redes sociais com análise de desempenho.",
+                  items: "Planejamento de conteúdo, Criação de posts, Agendamento, Análise de desempenho",
+                });
+                setIsDialogOpen(true);
+                setActiveTab("all");
+                toast.success("Formulário preenchido com Gestão de Redes Sociais");
+              }}>
+                <ShoppingCart className="w-4 h-4 mr-2" />
+                Solicitar
+              </Button>
             </Card>
 
             {/* Desenvolvimento de Coleção */}
@@ -600,6 +642,20 @@ function BudgetsManagementContent() {
                   </ul>
                 </div>
               </div>
+              <Button className="w-full mt-4 bg-green-600 hover:bg-green-700" onClick={() => {
+                setFormData({
+                  ...formData,
+                  projectTitle: "Desenvolvimento de Coleção",
+                  description: "Desenvolvimento completo de coleção com pesquisa, conceitualição, desenvolvimento e testes.",
+                  items: "Pesquisa de tendências, Conceitualição, Desenvolvimento de peças, Testes e ajustes",
+                });
+                setIsDialogOpen(true);
+                setActiveTab("all");
+                toast.success("Formulário preenchido com Desenvolvimento de Coleção");
+              }}>
+                <ShoppingCart className="w-4 h-4 mr-2" />
+                Solicitar
+              </Button>
             </Card>
 
             {/* Consultoria Criativa */}
@@ -627,6 +683,20 @@ function BudgetsManagementContent() {
                   </ul>
                 </div>
               </div>
+              <Button className="w-full mt-4 bg-green-600 hover:bg-green-700" onClick={() => {
+                setFormData({
+                  ...formData,
+                  projectTitle: "Consultoria Criativa",
+                  description: "Sessões de mentoria criativa com análise de portfólio e feedback estratégico.",
+                  items: "Sessões de mentoria, Análise de portfólio, Feedback estratégico, Planejamento de carreira",
+                });
+                setIsDialogOpen(true);
+                setActiveTab("all");
+                toast.success("Formulário preenchido com Consultoria Criativa");
+              }}>
+                <ShoppingCart className="w-4 h-4 mr-2" />
+                Solicitar
+              </Button>
             </Card>
 
             {/* Direção de Arte */}
@@ -654,6 +724,20 @@ function BudgetsManagementContent() {
                   </ul>
                 </div>
               </div>
+              <Button className="w-full mt-4 bg-green-600 hover:bg-green-700" onClick={() => {
+                setFormData({
+                  ...formData,
+                  projectTitle: "Direção de Arte",
+                  description: "Direção criativa completa com conceito, direcionamento visual e supervisão de equipe.",
+                  items: "Conceito criativo, Direcionamento visual, Supervisão de equipe, Aprovações",
+                });
+                setIsDialogOpen(true);
+                setActiveTab("all");
+                toast.success("Formulário preenchido com Direção de Arte");
+              }}>
+                <ShoppingCart className="w-4 h-4 mr-2" />
+                Solicitar
+              </Button>
             </Card>
           </div>
         </TabsContent>
