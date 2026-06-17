@@ -155,3 +155,12 @@
 - [x] Preencher automaticamente o formulário com dados do serviço
 - [x] Redirecionar para aba "Meus Orçamentos" com formulário aberto
 - [x] Mostrar notificação de sucesso ao clicar
+
+
+## Fase 21: Logo e Paleta de Cores Orbita
+- [x] Fazer upload da logo do Orbita para S3
+- [x] Adicionar logo na sidebar (SidebarHeader)
+- [x] Atualizar paleta de cores Light com as cores fornecidas
+- [x] Atualizar cores no NotificationBell
+- [x] Atualizar cores de status no BudgetsManagement
+- [ ] Aplicar paleta de cores em todas as páginas (BudgetsManagement, ContractsManagement, etc)

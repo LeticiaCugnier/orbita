@@ -218,17 +218,17 @@ function BudgetsManagementContent() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "draft":
-        return "bg-gray-500";
+        return "bg-muted";
       case "sent":
-        return "bg-blue-500";
+        return "bg-secondary";
       case "approved":
-        return "bg-green-500";
+        return "bg-primary";
       case "rejected":
-        return "bg-red-500";
+        return "bg-destructive";
       case "finalized":
-        return "bg-purple-500";
+        return "bg-accent";
       default:
-        return "bg-gray-500";
+        return "bg-muted";
     }
   };
 

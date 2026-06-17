@@ -81,11 +81,11 @@ export default function NotificationBell() {
   const getNotificationIcon = (type: string) => {
     switch (type) {
       case "approval":
-        return <Check className="w-4 h-4 text-green-500" />;
+        return <Check className="w-4 h-4" style={{ color: "#8EE8CB" }} />;
       case "deadline":
-        return <Clock className="w-4 h-4 text-orange-500" />;
+        return <Clock className="w-4 h-4" style={{ color: "#FFF2B2" }} />;
       case "alert":
-        return <AlertCircle className="w-4 h-4 text-blue-500" />;
+        return <AlertCircle className="w-4 h-4" style={{ color: "#7EA2A4" }} />;
       default:
         return <Bell className="w-4 h-4" />;
     }
@@ -94,11 +94,11 @@ export default function NotificationBell() {
   const getNotificationColor = (type: string) => {
     switch (type) {
       case "approval":
-        return "bg-green-500/10 hover:bg-green-500/20";
+        return "hover:bg-accent/20";
       case "deadline":
-        return "bg-orange-500/10 hover:bg-orange-500/20";
+        return "hover:bg-accent/20";
       case "alert":
-        return "bg-blue-500/10 hover:bg-blue-500/20";
+        return "hover:bg-accent/20";
       default:
         return "bg-muted hover:bg-muted/80";
     }
