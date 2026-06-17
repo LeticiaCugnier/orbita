@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Plus, Eye, Check, X, ArrowRight } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import DashboardLayout from "@/components/DashboardLayout";
@@ -20,6 +21,45 @@ interface BudgetFormData {
   items: string;
   validUntil: string;
 }
+
+const pricingTableData = [
+  {
+    serviceType: "Identidade Visual",
+    hourly: "Ajustes, reuniões e consultorias",
+    project: "Mais recomendado",
+    value: "Quando envolve estratégia e impacto de marca",
+  },
+  {
+    serviceType: "Criação de Estampas",
+    hourly: "Alterações e adaptações",
+    project: "Estampa avulsa ou pacote de estampas",
+    value: "Licenciamento e royalties",
+  },
+  {
+    serviceType: "Gestão de Redes Sociais",
+    hourly: "Demandas pontuais",
+    project: "Planos mensais",
+    value: "Quando atrelado a resultados e crescimento",
+  },
+  {
+    serviceType: "Desenvolvimento de Coleção",
+    hourly: "Consultoria e acompanhamento",
+    project: "Mais recomendado",
+    value: "Licenciamento ou participação nas vendas",
+  },
+  {
+    serviceType: "Consultoria Criativa",
+    hourly: "Mais recomendado",
+    project: "Pacotes de mentoria",
+    value: "Quando gera valor estratégico elevado",
+  },
+  {
+    serviceType: "Direção de Arte",
+    hourly: "Reuniões e acompanhamento",
+    project: "Projetos fechados",
+    value: "Projetos de grande impacto para a marca",
+  },
+];
 
 function BudgetsManagementContent() {
   const [activeTab, setActiveTab] = useState("all");
@@ -308,7 +348,7 @@ function BudgetsManagementContent() {
           </DialogTrigger>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
-              <DialogTitle>Criar Novo Orçamento</DialogTitle>
+              <DialogTitle>Criar Novo Orçamento Personalizado</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
@@ -366,18 +406,272 @@ function BudgetsManagementContent() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-5 bg-muted">
-          <TabsTrigger value="all">Geral</TabsTrigger>
-          <TabsTrigger value="approved">Aprovados</TabsTrigger>
-          <TabsTrigger value="sent">Em Andamento</TabsTrigger>
-          <TabsTrigger value="finalized">Finalizados</TabsTrigger>
-          <TabsTrigger value="draft">Rascunhos</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-4 bg-muted">
+          <TabsTrigger value="all">Meus Orçamentos</TabsTrigger>
+          <TabsTrigger value="pricing">Tabela de Precificação</TabsTrigger>
+          <TabsTrigger value="services">Tipos de Serviços</TabsTrigger>
+          <TabsTrigger value="status">Por Status</TabsTrigger>
         </TabsList>
 
-        <TabsContent value={activeTab} className="space-y-4 mt-6">
+        {/* Aba: Meus Orçamentos */}
+        <TabsContent value="all" className="space-y-4 mt-6">
+          <Tabs value={activeTab === "all" ? "all" : ""} className="w-full">
+            <TabsList className="grid w-full grid-cols-5 bg-muted mb-4">
+              <TabsTrigger value="all" onClick={() => setActiveTab("all")}>Geral</TabsTrigger>
+              <TabsTrigger value="approved" onClick={() => setActiveTab("approved")}>Aprovados</TabsTrigger>
+              <TabsTrigger value="sent" onClick={() => setActiveTab("sent")}>Em Andamento</TabsTrigger>
+              <TabsTrigger value="finalized" onClick={() => setActiveTab("finalized")}>Finalizados</TabsTrigger>
+              <TabsTrigger value="draft" onClick={() => setActiveTab("draft")}>Rascunhos</TabsTrigger>
+            </TabsList>
+          </Tabs>
           {filterBudgets(activeTab === "all" ? undefined : activeTab).length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {filterBudgets(activeTab === "all" ? undefined : activeTab).map(renderBudgetCard)}
+            </div>
+          ) : (
+            <Card className="p-12 text-center border-dashed">
+              <p className="text-muted-foreground">Nenhum orçamento encontrado nesta categoria</p>
+            </Card>
+          )}
+        </TabsContent>
+
+        {/* Aba: Tabela de Precificação */}
+        <TabsContent value="pricing" className="space-y-6 mt-6">
+          <Card className="p-6 border-border">
+            <h2 className="text-2xl font-bold text-foreground mb-4">Tabela de Precificação</h2>
+            <p className="text-muted-foreground mb-6">
+              O valor do projeto pode ser dividido por etapa ou considerado de forma integral, levando em conta:
+            </p>
+            <ul className="space-y-2 mb-8 text-foreground">
+              <li className="flex items-start gap-3">
+                <span className="text-primary font-bold">•</span>
+                <span><strong>Complexidade da coleção</strong> — Nível de detalhe e sofisticação do projeto</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-primary font-bold">•</span>
+                <span><strong>Quantidade de peças desenvolvidas</strong> — Número de itens a criar</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-primary font-bold">•</span>
+                <span><strong>Número de adaptações e revisões</strong> — Ajustes solicitados pelo cliente</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-primary font-bold">•</span>
+                <span><strong>Tempo de desenvolvimento</strong> — Horas/dias necessários</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-primary font-bold">•</span>
+                <span><strong>Exclusividade e licenciamento</strong> — Direitos de uso e propriedade intelectual</span>
+              </li>
+            </ul>
+
+            <h3 className="text-xl font-bold text-foreground mb-4">Qual Modelo Usar em Cada Job?</h3>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="font-bold">Tipo de Serviço</TableHead>
+                    <TableHead className="font-bold">Por Hora</TableHead>
+                    <TableHead className="font-bold">Por Projeto</TableHead>
+                    <TableHead className="font-bold">Por Valor</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {pricingTableData.map((row, idx) => (
+                    <TableRow key={idx}>
+                      <TableCell className="font-semibold text-foreground">{row.serviceType}</TableCell>
+                      <TableCell className="text-muted-foreground">{row.hourly}</TableCell>
+                      <TableCell className="text-muted-foreground">{row.project}</TableCell>
+                      <TableCell className="text-muted-foreground">{row.value}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </Card>
+        </TabsContent>
+
+        {/* Aba: Tipos de Serviços */}
+        <TabsContent value="services" className="space-y-6 mt-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Identidade Visual */}
+            <Card className="p-6 border-border hover:shadow-lg transition-shadow">
+              <div className="flex items-start justify-between mb-4">
+                <h3 className="text-xl font-bold text-foreground">Identidade Visual</h3>
+                <Badge className="bg-blue-600">Estratégia</Badge>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm font-semibold text-muted-foreground mb-2">O que vem nele:</p>
+                  <ul className="text-sm text-foreground space-y-1">
+                    <li>• Logo e variações</li>
+                    <li>• Paleta de cores</li>
+                    <li>• Tipografia</li>
+                    <li>• Manual de marca</li>
+                  </ul>
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-muted-foreground mb-2">Entregáveis:</p>
+                  <ul className="text-sm text-foreground space-y-1">
+                    <li>• Arquivos vetoriais (AI, EPS)</li>
+                    <li>• Guia de aplicação</li>
+                    <li>• Mockups</li>
+                  </ul>
+                </div>
+              </div>
+            </Card>
+
+            {/* Criação de Estampas */}
+            <Card className="p-6 border-border hover:shadow-lg transition-shadow">
+              <div className="flex items-start justify-between mb-4">
+                <h3 className="text-xl font-bold text-foreground">Criação de Estampas</h3>
+                <Badge className="bg-purple-600">Design</Badge>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm font-semibold text-muted-foreground mb-2">O que vem nele:</p>
+                  <ul className="text-sm text-foreground space-y-1">
+                    <li>• Designs originais</li>
+                    <li>• Variações de cores</li>
+                    <li>• Testes de impressão</li>
+                    <li>• Adaptações</li>
+                  </ul>
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-muted-foreground mb-2">Entregáveis:</p>
+                  <ul className="text-sm text-foreground space-y-1">
+                    <li>• Arquivos de alta resolução</li>
+                    <li>• Separação de cores</li>
+                    <li>• Documentação técnica</li>
+                  </ul>
+                </div>
+              </div>
+            </Card>
+
+            {/* Gestão de Redes Sociais */}
+            <Card className="p-6 border-border hover:shadow-lg transition-shadow">
+              <div className="flex items-start justify-between mb-4">
+                <h3 className="text-xl font-bold text-foreground">Gestão de Redes Sociais</h3>
+                <Badge className="bg-green-600">Marketing</Badge>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm font-semibold text-muted-foreground mb-2">O que vem nele:</p>
+                  <ul className="text-sm text-foreground space-y-1">
+                    <li>• Planejamento de conteúdo</li>
+                    <li>• Criação de posts</li>
+                    <li>• Agendamento</li>
+                    <li>• Análise de desempenho</li>
+                  </ul>
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-muted-foreground mb-2">Entregáveis:</p>
+                  <ul className="text-sm text-foreground space-y-1">
+                    <li>• Calendário editorial</li>
+                    <li>• Relatórios mensais</li>
+                    <li>• Conteúdo em múltiplos formatos</li>
+                  </ul>
+                </div>
+              </div>
+            </Card>
+
+            {/* Desenvolvimento de Coleção */}
+            <Card className="p-6 border-border hover:shadow-lg transition-shadow">
+              <div className="flex items-start justify-between mb-4">
+                <h3 className="text-xl font-bold text-foreground">Desenvolvimento de Coleção</h3>
+                <Badge className="bg-orange-600">Completo</Badge>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm font-semibold text-muted-foreground mb-2">O que vem nele:</p>
+                  <ul className="text-sm text-foreground space-y-1">
+                    <li>• Pesquisa de tendências</li>
+                    <li>• Conceituação</li>
+                    <li>• Desenvolvimento de peças</li>
+                    <li>• Testes e ajustes</li>
+                  </ul>
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-muted-foreground mb-2">Entregáveis:</p>
+                  <ul className="text-sm text-foreground space-y-1">
+                    <li>• Lookbook</li>
+                    <li>• Especificações técnicas</li>
+                    <li>• Arquivos para produção</li>
+                  </ul>
+                </div>
+              </div>
+            </Card>
+
+            {/* Consultoria Criativa */}
+            <Card className="p-6 border-border hover:shadow-lg transition-shadow">
+              <div className="flex items-start justify-between mb-4">
+                <h3 className="text-xl font-bold text-foreground">Consultoria Criativa</h3>
+                <Badge className="bg-indigo-600">Mentoria</Badge>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm font-semibold text-muted-foreground mb-2">O que vem nele:</p>
+                  <ul className="text-sm text-foreground space-y-1">
+                    <li>• Sessões de mentoria</li>
+                    <li>• Análise de portfólio</li>
+                    <li>• Feedback estratégico</li>
+                    <li>• Planejamento de carreira</li>
+                  </ul>
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-muted-foreground mb-2">Entregáveis:</p>
+                  <ul className="text-sm text-foreground space-y-1">
+                    <li>• Plano de ação</li>
+                    <li>• Materiais de suporte</li>
+                    <li>• Acompanhamento contínuo</li>
+                  </ul>
+                </div>
+              </div>
+            </Card>
+
+            {/* Direção de Arte */}
+            <Card className="p-6 border-border hover:shadow-lg transition-shadow">
+              <div className="flex items-start justify-between mb-4">
+                <h3 className="text-xl font-bold text-foreground">Direção de Arte</h3>
+                <Badge className="bg-red-600">Liderança</Badge>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm font-semibold text-muted-foreground mb-2">O que vem nele:</p>
+                  <ul className="text-sm text-foreground space-y-1">
+                    <li>• Conceito criativo</li>
+                    <li>• Direcionamento visual</li>
+                    <li>• Supervisão de equipe</li>
+                    <li>• Aprovações</li>
+                  </ul>
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-muted-foreground mb-2">Entregáveis:</p>
+                  <ul className="text-sm text-foreground space-y-1">
+                    <li>• Briefing criativo</li>
+                    <li>• Direcionamentos visuais</li>
+                    <li>• Relatórios de progresso</li>
+                  </ul>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* Aba: Por Status */}
+        <TabsContent value="status" className="space-y-4 mt-6">
+          <Tabs value={activeTab === "status" ? "all" : ""} className="w-full">
+            <TabsList className="grid w-full grid-cols-5 bg-muted mb-4">
+              <TabsTrigger value="all" onClick={() => setActiveTab("all")}>Geral</TabsTrigger>
+              <TabsTrigger value="approved" onClick={() => setActiveTab("approved")}>Aprovados</TabsTrigger>
+              <TabsTrigger value="sent" onClick={() => setActiveTab("sent")}>Em Andamento</TabsTrigger>
+              <TabsTrigger value="finalized" onClick={() => setActiveTab("finalized")}>Finalizados</TabsTrigger>
+              <TabsTrigger value="draft" onClick={() => setActiveTab("draft")}>Rascunhos</TabsTrigger>
+            </TabsList>
+          </Tabs>
+          {filterBudgets(activeTab === "status" ? "all" : activeTab).length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filterBudgets(activeTab === "status" ? "all" : activeTab).map(renderBudgetCard)}
             </div>
           ) : (
             <Card className="p-12 text-center border-dashed">

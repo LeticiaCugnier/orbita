@@ -139,3 +139,12 @@
 - [x] Corrigir toggle de tema Dark/Light
 - [x] Adicionar ThemeToggleButton visível na navbar
 - [x] Testar alternância de temas
+
+
+## Fase 19: Tabela de Precificação e Tipos de Serviços
+- [x] Adicionar aba "Tabela de Precificação" com matriz de modelos
+- [x] Criar aba "Tipos de Serviços" com 6 cards detalhados
+- [x] Incluir "O que vem nele" em cada serviço
+- [x] Incluir "Entregáveis" em cada serviço
+- [x] Manter funcionalidade de orçamento personalizado
+- [x] Organizar em abas: Meus Orçamentos, Tabela, Tipos, Status
