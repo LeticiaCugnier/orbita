@@ -64,9 +64,14 @@ function Router() {
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="dark" switchable>
-      <Login />
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider defaultTheme="dark" switchable>
+        <TooltipProvider>
+          <Toaster />
+          <Router />
+        </TooltipProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
 

@@ -2,6 +2,8 @@ import { useLocation } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import DashboardLayout from "@/components/DashboardLayout";
 import spaceBg from "@/imgs/fundo.png";
+import { useEffect, useState } from "react";
+
 
 interface OrbitalItem {
   id: string;
@@ -9,6 +11,7 @@ interface OrbitalItem {
   count: string;
   aro: number;
   angle: number;
+  speed: number;
   path: string;
   icon: string;
   color: string;
@@ -18,13 +21,29 @@ function InicioContent() {
   const [, setLocation] = useLocation();
   const { user } = useAuth();
 
+  const [time, setTime] = useState(0);
+
+  useEffect(() => {
+    let frame: number;
+
+    const animate = () => {
+      setTime(performance.now() / 1000);
+      frame = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
   const orbitalItems: OrbitalItem[] = [
     {
       id: "client",
       label: "Clientes",
       count: "128",
       aro: 2,
-      angle: 220,
+      angle: 310,
+      speed: 12,
       path: "/client-area",
       icon: "👥",
       color: "#59E7FF",
@@ -34,7 +53,8 @@ function InicioContent() {
       label: "Projetos",
       count: "24",
       aro: 1,
-      angle: 310,
+      angle: 200,
+      speed: 12,
       path: "/projects",
       icon: "📁",
       color: "#D76BFF",
@@ -45,6 +65,7 @@ function InicioContent() {
       count: "18",
       aro: 1,
       angle: 40,
+      speed: -6,
       path: "/contracts",
       icon: "📄",
       color: "#9B5CFF",
@@ -55,6 +76,7 @@ function InicioContent() {
       count: "37",
       aro: 2,
       angle: 80,
+      speed: -6,
       path: "/budgets",
       icon: "💲",
       color: "#3FFFD6",
@@ -65,6 +87,7 @@ function InicioContent() {
       count: "12",
       aro: 2,
       angle: 150,
+      speed: -6,
       path: "/briefing",
       icon: "📋",
       color: "#FFCB6B",
@@ -75,12 +98,12 @@ function InicioContent() {
     <div className="relative min-h-screen overflow-hidden">
       {/* Background */}
       <div
-  className="absolute inset-0 bg-cover bg-no-repeat"
-  style={{
-    backgroundImage: `url(${spaceBg})`,
-    backgroundPosition: "40% 50%",
-  }}
-/>
+        className="absolute inset-0 bg-cover bg-no-repeat"
+        style={{
+          backgroundImage: `url(${spaceBg})`,
+          backgroundPosition: "40% 50%",
+        }}
+      />
 
       <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]" />
 
@@ -147,27 +170,21 @@ function InicioContent() {
           </text>
 
           {orbitalItems.map((item) => {
-            const radius =
-              item.aro === 1 ? 180 : 320;
+            const radius = item.aro === 1 ? 180 : 320;
 
-            const rad =
-              (item.angle * Math.PI) / 180;
+            const angle = item.angle + time * item.speed;
 
-            const x =
-              500 + radius * Math.cos(rad);
+            const rad = (angle * Math.PI) / 180;
 
-            const y =
-              400 + radius * Math.sin(rad);
+            const x = 500 + radius * Math.cos(rad);
+
+            const y = 400 + radius * Math.sin(rad);
 
             return (
               <g
                 key={item.id}
-                onClick={() =>
-                  setLocation(item.path)
-                }
-                style={{
-                  cursor: "pointer",
-                }}
+                onClick={() => setLocation(item.path)}
+                style={{ cursor: "pointer" }}
               >
                 <circle
                   cx={x}
