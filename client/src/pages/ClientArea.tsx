@@ -1,54 +1,119 @@
 import { useState } from "react";
+
+import DashboardLayout from "@/components/DashboardLayout";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, MessageSquare, Download, CheckCircle2, XCircle, AlertCircle, Upload } from "lucide-react";
-import DashboardLayout from "@/components/DashboardLayout";
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
+
+import {
+  Search,
+  Filter,
+  Plus,
+  Upload,
+  Download,
+  Eye,
+  MessageSquare,
+  CheckCircle2,
+  XCircle,
+  AlertCircle,
+} from "lucide-react";
+
+/* -------------------------------------------------------------------------- */
+/*                                   Dados                                    */
+/* -------------------------------------------------------------------------- */
 
 const mockApprovals = [
   {
     id: 1,
-    title: "Mockups Iniciais",
+    title: "Homepage Desktop",
     project: "Redesign Website",
+    client: "Instituto Orion",
     status: "pending",
-    createdAt: "2026-06-10",
-    fileUrl: "#",
+    createdAt: "10/06/2026",
     comments: 2,
+    designer: "Lucas Martins",
+    version: "v1.0",
+    fileUrl: "#",
   },
   {
     id: 2,
-    title: "Logo Versão 1",
-    project: "Logo Design",
+    title: "Logo Principal",
+    project: "Branding",
+    client: "TechNova",
     status: "revision_requested",
-    createdAt: "2026-06-08",
-    fileUrl: "#",
+    createdAt: "08/06/2026",
     comments: 5,
+    designer: "Amanda Silva",
+    version: "v2",
+    fileUrl: "#",
   },
   {
     id: 3,
-    title: "Brand Guidelines v2",
-    project: "Branding Package",
+    title: "Manual da Marca",
+    project: "Branding",
+    client: "Solar Engenharia",
     status: "approved",
-    createdAt: "2026-06-05",
-    fileUrl: "#",
+    createdAt: "05/06/2026",
     comments: 3,
+    designer: "Pedro Costa",
+    version: "Final",
+    fileUrl: "#",
+  },
+  {
+    id: 4,
+    title: "Post Instagram",
+    project: "Social Media",
+    client: "Orion Labs",
+    status: "pending",
+    createdAt: "03/06/2026",
+    comments: 1,
+    designer: "Fernanda",
+    version: "v3",
+    fileUrl: "#",
   },
 ];
 
+/* -------------------------------------------------------------------------- */
+/*                              Configuração Status                           */
+/* -------------------------------------------------------------------------- */
+
 const statusColors: Record<string, string> = {
-  pending: "bg-blue-500/10 text-blue-500 border-blue-500/30",
-  approved: "bg-green-500/10 text-green-500 border-green-500/30",
-  rejected: "bg-red-500/10 text-red-500 border-red-500/30",
-  revision_requested: "bg-orange-500/10 text-orange-500 border-orange-500/30",
+  pending:
+    "bg-blue-500/15 text-blue-400 border border-blue-500/30",
+
+  approved:
+    "bg-green-500/15 text-green-400 border border-green-500/30",
+
+  rejected:
+    "bg-red-500/15 text-red-400 border border-red-500/30",
+
+  revision_requested:
+    "bg-orange-500/15 text-orange-400 border border-orange-500/30",
 };
 
 const statusLabels: Record<string, string> = {
-  pending: "Aguardando Aprovação",
+  pending: "Aguardando",
   approved: "Aprovado",
   rejected: "Rejeitado",
-  revision_requested: "Revisão Solicitada",
+  revision_requested: "Revisão",
 };
 
 const statusIcons: Record<string, React.ReactNode> = {
@@ -58,155 +123,701 @@ const statusIcons: Record<string, React.ReactNode> = {
   revision_requested: <AlertCircle className="w-4 h-4" />,
 };
 
+/* -------------------------------------------------------------------------- */
+/*                               Cards superiores                             */
+/* -------------------------------------------------------------------------- */
+
+const dashboardCards = [
+  {
+    title: "Total de Aprovações",
+    value: 28,
+    variation: "+12%",
+    color: "text-violet-400",
+  },
+  {
+    title: "Pendentes",
+    value: 6,
+    variation: "+3%",
+    color: "text-blue-400",
+  },
+  {
+    title: "Aprovadas",
+    value: 18,
+    variation: "+22%",
+    color: "text-green-400",
+  },
+  {
+    title: "Revisões",
+    value: 4,
+    variation: "-2%",
+    color: "text-orange-400",
+  },
+];
+
+/* -------------------------------------------------------------------------- */
+/*                              Componente Principal                          */
+/* -------------------------------------------------------------------------- */
+
 function ClientAreaContent() {
-  const [selectedApproval, setSelectedApproval] = useState<typeof mockApprovals[0] | null>(null);
+  const [selectedApproval, setSelectedApproval] = useState(mockApprovals[0]);
+
   const [comment, setComment] = useState("");
 
+  const [search, setSearch] = useState("");
+
+  const [activeTab, setActiveTab] = useState("all");
+
+  const filteredApprovals = mockApprovals.filter((item) => {
+
+    const matchesSearch =
+      item.title.toLowerCase().includes(search.toLowerCase()) ||
+      item.project.toLowerCase().includes(search.toLowerCase()) ||
+      item.client.toLowerCase().includes(search.toLowerCase());
+
+    const matchesTab =
+      activeTab === "all"
+        ? true
+        : activeTab === "approved"
+          ? item.status === "approved"
+          : activeTab === "pending"
+            ? item.status === "pending"
+            : item.status === "revision_requested";
+
+    return matchesSearch && matchesTab;
+  });
+
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-8">
+
+      {/* ================= HEADER ================= */}
+
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+
         <div>
-          <h1 className="text-3xl font-bold font-['Space_Grotesk']">Área do Cliente</h1>
-          <p className="text-muted-foreground mt-1">Aprove peças, envie comentários e gerencie arquivos</p>
+          <h1 className="text-3xl font-bold tracking-tight font-['Space_Grotesk']">
+            Área do Cliente
+          </h1>
+
+          <p className="text-muted-foreground mt-1">
+            Aprove peças, envie comentários e acompanhe todas as aprovações.
+          </p>
         </div>
-        <Button size="lg" className="gap-2">
-          <Upload className="w-4 h-4" />
-          Enviar Arquivo
-        </Button>
+
+        <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">
+
+          <Button
+            variant="outline"
+            className="gap-2 border-border/60"
+          >
+            <Filter className="w-4 h-4" />
+            Filtrar
+          </Button>
+
+          <div className="relative">
+
+            <Search
+              className="absolute left-3 top-1/2 -translate-y-1/2
+          h-4 w-4 text-muted-foreground"
+            />
+
+            <Input
+              placeholder="Buscar projeto..."
+
+              value={search}
+
+              onChange={(e) => setSearch(e.target.value)}
+
+              className="pl-10 w-full md:w-72"
+            />
+
+          </div>
+
+          <Button
+            className="gap-2 bg-violet-600 hover:bg-violet-700"
+          >
+            <Plus className="w-4 h-4" />
+            Novo Envio
+          </Button>
+
+        </div>
+
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Approvals List */}
-        <div className="lg:col-span-2 space-y-4">
-          <h2 className="text-xl font-bold font-['Space_Grotesk']">Peças para Aprovação</h2>
+      {/* ================= MÉTRICAS ================= */}
 
-          <div className="space-y-3">
-            {mockApprovals.map((approval) => (
-              <Card
-                key={approval.id}
-                className={`border-border/50 hover:border-accent/50 transition-colors cursor-pointer ${
-                  selectedApproval?.id === approval.id ? "border-accent" : ""
-                }`}
-                onClick={() => setSelectedApproval(approval)}
+      <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+
+        {dashboardCards.map((card) => (
+
+          <Card
+            key={card.title}
+            className="border-border/40 bg-card/60 backdrop-blur"
+          >
+
+            <CardContent className="p-6">
+
+              <div className="flex items-center justify-between">
+
+                <div>
+
+                  <p className="text-sm text-muted-foreground">
+                    {card.title}
+                  </p>
+
+                  <h2 className="text-3xl font-bold mt-2">
+                    {card.value}
+                  </h2>
+
+                  <p
+                    className={`text-sm mt-2 font-medium ${card.color}`}
+                  >
+                    {card.variation} este mês
+                  </p>
+
+                </div>
+
+                <div
+                  className="w-12 h-12 rounded-xl
+              bg-violet-500/10
+              flex items-center justify-center"
+                >
+
+                  <CheckCircle2 className="w-6 h-6 text-violet-400" />
+
+                </div>
+
+              </div>
+
+            </CardContent>
+
+          </Card>
+
+        ))}
+
+      </div>
+
+      {/* ================= CONTEÚDO ================= */}
+
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
+
+        {/* ================= TABELA ================= */}
+
+        <div className="xl:col-span-8">
+
+          <Card className="border-border/40 bg-card/60 backdrop-blur">
+
+            <CardHeader className="pb-3">
+
+              <div className="flex items-center justify-between">
+
+                <div>
+
+                  <CardTitle>
+                    Aprovações
+                  </CardTitle>
+
+                  <CardDescription>
+                    Gerencie todas as peças enviadas ao cliente.
+                  </CardDescription>
+
+                </div>
+
+              </div>
+
+            </CardHeader>
+
+            <CardContent>
+
+              {/* Tabs */}
+
+              <Tabs
+                value={activeTab}
+                onValueChange={setActiveTab}
               >
-                <CardContent className="pt-6">
-                  <div className="flex items-center justify-between gap-4">
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold">{approval.title}</h3>
-                      <p className="text-sm text-muted-foreground">{approval.project}</p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Enviado em {new Date(approval.createdAt).toLocaleDateString("pt-BR")}
-                      </p>
+
+                <TabsList className="mb-5">
+
+                  <TabsTrigger value="all">
+                    Todas
+                  </TabsTrigger>
+
+                  <TabsTrigger value="pending">
+                    Pendentes
+                  </TabsTrigger>
+
+                  <TabsTrigger value="approved">
+                    Aprovadas
+                  </TabsTrigger>
+
+                  <TabsTrigger value="revision">
+                    Revisão
+                  </TabsTrigger>
+
+                </TabsList>
+
+              </Tabs>
+
+              {/* Tabela */}
+
+              <Table>
+
+                <TableHeader>
+
+                  <TableRow>
+
+                    <TableHead>Projeto</TableHead>
+
+                    <TableHead>Cliente</TableHead>
+
+                    <TableHead>Designer</TableHead>
+
+                    <TableHead>Status</TableHead>
+
+                    <TableHead>Comentários</TableHead>
+
+                    <TableHead>Versão</TableHead>
+
+                    <TableHead className="text-right">
+                      Ações
+                    </TableHead>
+
+                  </TableRow>
+
+                </TableHeader>
+
+                <TableBody>
+
+                  {filteredApprovals.length === 0 ? (
+
+                    <TableRow>
+
+                      <TableCell
+
+                        colSpan={7}
+
+                        className="text-center py-14"
+
+                      >
+
+                        <div className="space-y-2">
+
+                          <Search className="mx-auto h-10 w-10 text-muted-foreground" />
+
+                          <p className="font-semibold">
+
+                            Nenhum resultado encontrado
+
+                          </p>
+
+                          <p className="text-sm text-muted-foreground">
+
+                            Tente alterar sua pesquisa.
+
+                          </p>
+
+                        </div>
+
+                      </TableCell>
+
+                    </TableRow>
+
+                  ) : (
+
+
+                    filteredApprovals.map(...)
+
+                </TableBody>
+
+              </Table>
+
+            </CardContent>
+
+          </Card>
+
+        </div>
+
+        {/* Painel direito será criado na Parte 4 */}
+
+        <div className="xl:col-span-4">
+
+          {selectedApproval && (
+
+            <div className="sticky top-6 space-y-5">
+
+              {/* ================= DETALHES ================= */}
+
+              <Card className="border-border/40 bg-card/60 backdrop-blur">
+
+                <CardHeader>
+
+                  <CardTitle className="text-xl">
+                    {selectedApproval.title}
+                  </CardTitle>
+
+                  <CardDescription>
+                    {selectedApproval.project}
+                  </CardDescription>
+
+                </CardHeader>
+
+                <CardContent className="space-y-6">
+
+                  {/* Status */}
+
+                  <div>
+
+                    <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">
+                      Status
+                    </p>
+
+                    <Badge
+                      className={`gap-2 ${statusColors[selectedApproval.status]}`}
+                    >
+                      {statusIcons[selectedApproval.status]}
+                      {statusLabels[selectedApproval.status]}
+                    </Badge>
+
+                  </div>
+
+                  {/* Informações */}
+
+                  <div className="space-y-4">
+
+                    <div className="flex justify-between">
+
+                      <span className="text-muted-foreground">
+                        Cliente
+                      </span>
+
+                      <span className="font-medium">
+                        {selectedApproval.client}
+                      </span>
+
                     </div>
 
-                    <div className="flex items-center gap-3 flex-shrink-0">
-                      <Badge className={statusColors[approval.status]}>
-                        {statusIcons[approval.status]}
-                        <span className="ml-1">{statusLabels[approval.status]}</span>
-                      </Badge>
+                    <div className="flex justify-between">
 
-                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                        <MessageSquare className="w-4 h-4" />
-                        {approval.comments}
+                      <span className="text-muted-foreground">
+                        Designer
+                      </span>
+
+                      <span className="font-medium">
+                        {selectedApproval.designer}
+                      </span>
+
+                    </div>
+
+                    <div className="flex justify-between">
+
+                      <span className="text-muted-foreground">
+                        Versão
+                      </span>
+
+                      <span className="font-medium">
+                        {selectedApproval.version}
+                      </span>
+
+                    </div>
+
+                    <div className="flex justify-between">
+
+                      <span className="text-muted-foreground">
+                        Data
+                      </span>
+
+                      <span className="font-medium">
+                        {selectedApproval.createdAt}
+                      </span>
+
+                    </div>
+
+                    <div className="flex justify-between">
+
+                      <span className="text-muted-foreground">
+                        Comentários
+                      </span>
+
+                      <span className="font-medium">
+                        {selectedApproval.comments}
+                      </span>
+
+                    </div>
+
+                  </div>
+
+                  {/* Download */}
+
+                  <Button
+                    variant="outline"
+                    className="w-full gap-2"
+                  >
+                    <Download className="w-4 h-4" />
+                    Baixar Arquivo
+                  </Button>
+
+                </CardContent>
+
+              </Card>
+              {/* Preview */}
+
+              <Card className="border-border/40 bg-card/60">
+
+                <CardHeader>
+
+                  <CardTitle>
+                    Preview
+                  </CardTitle>
+
+                </CardHeader>
+
+                <CardContent>
+
+                  <div
+                    className="
+          aspect-video
+          rounded-lg
+          border
+          border-dashed
+          border-border
+          flex
+          items-center
+          justify-center
+          bg-muted/30
+          "
+                  >
+
+                    <div className="text-center">
+
+                      <Eye className="mx-auto h-8 w-8 text-muted-foreground mb-3" />
+
+                      <p className="text-sm text-muted-foreground">
+
+                        Visualização da peça
+
+                      </p>
+
+                    </div>
+
+                  </div>
+
+                </CardContent>
+
+              </Card>
+
+              {/* ================= COMENTÁRIOS ================= */}
+
+              <Card className="border-border/40 bg-card/60 backdrop-blur">
+
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <MessageSquare className="w-5 h-5" />
+                    Comentários
+                  </CardTitle>
+
+                  <CardDescription>
+                    Converse com o designer sobre esta peça.
+                  </CardDescription>
+                </CardHeader>
+
+                <CardContent className="space-y-5">
+
+                  <div className="space-y-4 max-h-80 overflow-y-auto pr-2">
+
+                    {/* Designer */}
+
+                    <div className="flex gap-3">
+
+                      <div className="h-10 w-10 rounded-full bg-violet-500 flex items-center justify-center text-white font-semibold">
+                        D
                       </div>
 
-                      <Button variant="ghost" size="sm" title="Download">
-                        <Download className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
+                      <div className="flex-1 rounded-xl bg-muted p-4">
 
-        {/* Details Panel */}
-        <div className="space-y-4">
-          {selectedApproval ? (
-            <>
-              <Card className="border-border/50">
-                <CardHeader>
-                  <CardTitle className="text-lg">{selectedApproval.title}</CardTitle>
-                  <CardDescription>{selectedApproval.project}</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <p className="text-sm font-medium mb-2">Status</p>
-                    <Badge className={statusColors[selectedApproval.status]}>
-                      {statusIcons[selectedApproval.status]}
-                      <span className="ml-1">{statusLabels[selectedApproval.status]}</span>
-                    </Badge>
-                  </div>
+                        <div className="flex items-center justify-between">
 
-                  <div className="space-y-2">
-                    <Button className="w-full" size="sm">
-                      <CheckCircle2 className="w-4 h-4 mr-2" />
-                      Aprovar
-                    </Button>
-                    <Button variant="outline" className="w-full" size="sm">
-                      <AlertCircle className="w-4 h-4 mr-2" />
-                      Solicitar Revisão
-                    </Button>
-                    <Button variant="destructive" className="w-full" size="sm">
-                      <XCircle className="w-4 h-4 mr-2" />
-                      Rejeitar
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+                          <span className="font-semibold">
+                            Designer
+                          </span>
 
-              {/* Comments Section */}
-              <Card className="border-border/50">
-                <CardHeader>
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <MessageSquare className="w-5 h-5" />
-                    Comentários ({selectedApproval.comments})
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-3 max-h-48 overflow-y-auto">
-                    <div className="bg-muted/50 rounded p-3">
-                      <p className="text-sm font-medium">Designer</p>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        Aqui estão os primeiros mockups conforme solicitado. Fique à vontade para sugerir ajustes.
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-2">10 de junho</p>
+                          <span className="text-xs text-muted-foreground">
+                            10 Jun • 09:15
+                          </span>
+
+                        </div>
+
+                        <p className="text-sm text-muted-foreground mt-2">
+                          Finalizei a primeira versão conforme o briefing.
+                          Caso deseje alterar cores ou tipografia basta comentar abaixo.
+                        </p>
+
+                      </div>
+
                     </div>
 
-                    <div className="bg-muted/50 rounded p-3">
-                      <p className="text-sm font-medium">Cliente</p>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        Gostei da direção! Podemos ajustar as cores para algo mais vibrante?
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-2">11 de junho</p>
+                    {/* Cliente */}
+
+                    <div className="flex gap-3 justify-end">
+
+                      <div className="flex-1 max-w-[90%] rounded-xl bg-violet-600 p-4 text-white">
+
+                        <div className="flex items-center justify-between">
+
+                          <span className="font-semibold">
+                            Você
+                          </span>
+
+                          <span className="text-xs text-violet-200">
+                            10 Jun • 10:42
+                          </span>
+
+                        </div>
+
+                        <p className="text-sm mt-2">
+                          Gostei bastante da direção. Podemos testar uma versão com tons mais claros?
+                        </p>
+
+                      </div>
+
                     </div>
+
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="border-t pt-4 space-y-3">
+
                     <Textarea
-                      placeholder="Adicione um comentário..."
+                      rows={4}
+                      placeholder="Escreva um comentário..."
                       value={comment}
                       onChange={(e) => setComment(e.target.value)}
-                      rows={3}
                       className="resize-none"
                     />
-                    <Button size="sm" className="w-full">
+
+                    <Button className="w-full">
+                      <MessageSquare className="w-4 h-4 mr-2" />
                       Enviar Comentário
                     </Button>
+
                   </div>
+
                 </CardContent>
+
               </Card>
-            </>
-          ) : (
-            <Card className="border-border/50 border-dashed">
-              <CardContent className="pt-6 text-center">
-                <p className="text-muted-foreground">Selecione uma peça para ver detalhes</p>
-              </CardContent>
-            </Card>
+
+              {/* ================= AÇÕES ================= */}
+
+              <Card className="border-border/40 bg-card/60 backdrop-blur">
+
+                <CardHeader>
+
+                  <CardTitle>
+                    Aprovação
+                  </CardTitle>
+
+                  <CardDescription>
+                    Escolha uma ação para esta peça.
+                  </CardDescription>
+
+                </CardHeader>
+
+                <CardContent className="space-y-3">
+
+                  <Button
+                    className="w-full bg-green-600 hover:bg-green-700"
+                  >
+                    <CheckCircle2 className="mr-2 h-4 w-4" />
+
+                    Aprovar
+
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    className="w-full border-yellow-500/40 text-yellow-400 hover:bg-yellow-500/10"
+                  >
+                    <AlertCircle className="mr-2 h-4 w-4" />
+
+                    Solicitar Revisão
+
+                  </Button>
+
+                  <Button
+                    variant="destructive"
+                    className="w-full"
+                  >
+                    <XCircle className="mr-2 h-4 w-4" />
+
+                    Rejeitar
+
+                  </Button>
+
+                </CardContent>
+
+              </Card>
+
+
+
+              {/* ================= HISTÓRICO ================= */}
+
+              <Card className="border-border/40 bg-card/60 backdrop-blur">
+
+                <CardHeader>
+
+                  <CardTitle>
+                    Histórico
+                  </CardTitle>
+
+                </CardHeader>
+
+                <CardContent className="space-y-4">
+
+                  <div className="border-l-2 border-violet-500 pl-4">
+
+                    <p className="font-medium">
+                      Arquivo enviado
+                    </p>
+
+                    <p className="text-sm text-muted-foreground">
+                      {selectedApproval.createdAt}
+                    </p>
+
+                  </div>
+
+                  <div className="border-l-2 border-blue-500 pl-4">
+
+                    <p className="font-medium">
+                      Cliente visualizou
+                    </p>
+
+                    <p className="text-sm text-muted-foreground">
+                      Há 2 horas
+                    </p>
+
+                  </div>
+
+                  <div className="border-l-2 border-orange-500 pl-4">
+
+                    <p className="font-medium">
+                      Aguardando decisão
+                    </p>
+
+                    <p className="text-sm text-muted-foreground">
+                      Em andamento
+                    </p>
+
+                  </div>
+
+                </CardContent>
+
+              </Card>
+
+            </div>
+
           )}
+
         </div>
+
       </div>
+
     </div>
   );
 }

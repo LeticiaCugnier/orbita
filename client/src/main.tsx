@@ -18,7 +18,15 @@ const queryClient = new QueryClient({
 });
 
 const redirectToLoginIfUnauthorized = (error: unknown) => {
+  console.log("=== TRPC ERROR ===");
+  console.log(error);
+
   if (!(error instanceof TRPCClientError)) return;
+
+  console.log("message:", error.message);
+  console.log("data:", error.data);
+  console.log("shape:", error.shape);
+
   if (typeof window === "undefined") return;
 
   const isUnauthorized = error.message === UNAUTHED_ERR_MSG;
@@ -28,7 +36,7 @@ const redirectToLoginIfUnauthorized = (error: unknown) => {
   window.location.href = getLoginUrl();
 };
 
-queryClient.getQueryCache().subscribe(event => {
+/*queryClient.getQueryCache().subscribe(event => {
   if (event.type === "updated" && event.action.type === "error") {
     const error = event.query.state.error;
     redirectToLoginIfUnauthorized(error);
@@ -42,7 +50,7 @@ queryClient.getMutationCache().subscribe(event => {
     redirectToLoginIfUnauthorized(error);
     console.error("[API Mutation Error]", error);
   }
-});
+});*/
 
 const trpcClient = trpc.createClient({
   links: [
