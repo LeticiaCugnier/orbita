@@ -1,10 +1,12 @@
 import { useLocation } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import DashboardLayout from "@/components/DashboardLayout";
+import spaceBg from "@/imgs/fundo.png";
 
 interface OrbitalItem {
   id: string;
   label: string;
+  count: string;
   aro: number;
   angle: number;
   path: string;
@@ -17,141 +19,201 @@ function InicioContent() {
   const { user } = useAuth();
 
   const orbitalItems: OrbitalItem[] = [
-    { id: "dashboard", label: "Dashboard", aro: 1, angle: 0, path: "/dashboard", icon: "📊", color: "#8EE8CB" },
-    { id: "briefing", label: "Briefing", aro: 1, angle: 60, path: "/briefing", icon: "📋", color: "#7EA2A4" },
-    { id: "projects", label: "Projetos", aro: 1, angle: 120, path: "/projects", icon: "🎯", color: "#8B8DA7" },
-    { id: "budgets", label: "Orçamentos", aro: 2, angle: 30, path: "/budgets", icon: "💰", color: "#9C7A97" },
-    { id: "contracts", label: "Contratos", aro: 2, angle: 90, path: "/contracts", icon: "📄", color: "#FFF2B2" },
-    { id: "client", label: "Cliente", aro: 2, angle: 150, path: "/client-area", icon: "👥", color: "#8EE8CB" },
+    {
+      id: "client",
+      label: "Clientes",
+      count: "128",
+      aro: 2,
+      angle: 220,
+      path: "/client-area",
+      icon: "👥",
+      color: "#59E7FF",
+    },
+    {
+      id: "projects",
+      label: "Projetos",
+      count: "24",
+      aro: 1,
+      angle: 310,
+      path: "/projects",
+      icon: "📁",
+      color: "#D76BFF",
+    },
+    {
+      id: "contracts",
+      label: "Contratos",
+      count: "18",
+      aro: 1,
+      angle: 40,
+      path: "/contracts",
+      icon: "📄",
+      color: "#9B5CFF",
+    },
+    {
+      id: "budgets",
+      label: "Orçamentos",
+      count: "37",
+      aro: 2,
+      angle: 80,
+      path: "/budgets",
+      icon: "💲",
+      color: "#3FFFD6",
+    },
+    {
+      id: "briefing",
+      label: "Briefings",
+      count: "12",
+      aro: 2,
+      angle: 150,
+      path: "/briefing",
+      icon: "📋",
+      color: "#FFCB6B",
+    },
   ];
 
-  const handleItemClick = (path: string) => {
-    setLocation(path);
-  };
-
   return (
-    <div className="min-h-screen w-full flex items-center justify-center overflow-hidden relative p-4">
-      {/* Fundo com vídeo */}
-      <div className="absolute inset-0 z-0">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="w-full h-full object-cover"
-        >
-          <source src="/manus-storage/MOSHED-2026-6-14-12-26-37_e53708a1.webm" type="video/webm" />
-        </video>
-        <div className="absolute inset-0 bg-black/70"></div>
+    <div className="relative min-h-screen overflow-hidden">
+      {/* Background */}
+      <div
+  className="absolute inset-0 bg-cover bg-no-repeat"
+  style={{
+    backgroundImage: `url(${spaceBg})`,
+    backgroundPosition: "40% 50%",
+  }}
+/>
+
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]" />
+
+      {/* Header */}
+      <div className="absolute top-6 left-8 z-20">
+        <h1 className="text-3xl font-bold text-white">
+          Bem-vinda, {user?.name || "Letícia"} ✨
+        </h1>
+
+        <p className="text-gray-300">
+          O seu universo de gestão inteligente
+        </p>
       </div>
-      
-      {/* Fundo com gradiente */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#8EE8CB]/5 via-transparent to-[#9C7A97]/5 pointer-events-none" />
 
-      {/* Container da órbita */}
-      <div className="relative w-full max-w-2xl aspect-square z-10">
-        {/* SVG com órbitas */}
+      {/* Órbita */}
+      <div className="relative min-h-screen w-full overflow-hidden flex items-center justify-center">
         <svg
-          className="w-full h-full"
-          viewBox="0 0 800 800"
-          xmlns="http://www.w3.org/2000/svg"
-          style={{ filter: "drop-shadow(0 0 30px rgba(142, 232, 203, 0.1))" }}
+          width="1000"
+          height="800"
+          viewBox="0 0 1000 800"
         >
-          {/* Órbitas estáticas */}
-          <circle cx="400" cy="400" r="150" fill="none" stroke="rgba(142, 232, 203, 0.15)" strokeWidth="1" />
-          <circle cx="400" cy="400" r="250" fill="none" stroke="rgba(126, 162, 164, 0.1)" strokeWidth="1" />
+          {/* Órbitas */}
+          <circle
+            cx="500"
+            cy="400"
+            r="180"
+            fill="none"
+            stroke="rgba(200,100,255,.35)"
+            strokeWidth="2"
+          />
 
-          {/* Itens em órbita */}
+          <circle
+            cx="500"
+            cy="400"
+            r="320"
+            fill="none"
+            stroke="rgba(100,255,255,.25)"
+            strokeWidth="2"
+          />
+
+          {/* Centro */}
+          <circle
+            cx="500"
+            cy="400"
+            r="95"
+            fill="rgba(0,0,0,.8)"
+            stroke="#8EE8CB"
+            strokeWidth="2"
+            style={{
+              filter:
+                "drop-shadow(0 0 50px #8EE8CB)",
+            }}
+          />
+
+          <text
+            x="500"
+            y="410"
+            textAnchor="middle"
+            fill="#8EE8CB"
+            fontSize="28"
+            letterSpacing="8"
+          >
+            ORBITA
+          </text>
+
           {orbitalItems.map((item) => {
-            const radius = item.aro === 1 ? 150 : 250;
-            const rad = (item.angle * Math.PI) / 180;
-            const x = 400 + radius * Math.cos(rad);
-            const y = 400 + radius * Math.sin(rad);
+            const radius =
+              item.aro === 1 ? 180 : 320;
+
+            const rad =
+              (item.angle * Math.PI) / 180;
+
+            const x =
+              500 + radius * Math.cos(rad);
+
+            const y =
+              400 + radius * Math.sin(rad);
 
             return (
-              <g key={item.id} onClick={() => handleItemClick(item.path)} style={{ cursor: "pointer" }}>
-                {/* Linha conectando ao centro */}
-                <line
-                  x1="400"
-                  y1="400"
-                  x2={x}
-                  y2={y}
-                  stroke={`${item.color}40`}
-                  strokeWidth="1"
-                />
-                {/* Bola */}
+              <g
+                key={item.id}
+                onClick={() =>
+                  setLocation(item.path)
+                }
+                style={{
+                  cursor: "pointer",
+                }}
+              >
                 <circle
                   cx={x}
                   cy={y}
-                  r="40"
-                  fill="rgba(15, 15, 15, 0.9)"
+                  r="55"
+                  fill="rgba(10,10,25,.9)"
                   stroke={item.color}
                   strokeWidth="2"
-                  className="hover:stroke-4 transition-all"
+                  style={{
+                    filter: `drop-shadow(0 0 20px ${item.color})`,
+                  }}
                 />
-                {/* Ícone */}
+
                 <text
                   x={x}
-                  y={y - 5}
+                  y={y - 10}
                   textAnchor="middle"
                   fill={item.color}
                   fontSize="24"
-                  fontFamily="'Space Grotesk', sans-serif"
-                  className="pointer-events-none"
                 >
                   {item.icon}
                 </text>
-                {/* Label */}
+
                 <text
                   x={x}
-                  y={y + 18}
+                  y={y + 15}
                   textAnchor="middle"
-                  fill="#f5f5f5"
-                  fontSize="10"
-                  fontWeight="600"
-                  fontFamily="'Inter', sans-serif"
-                  className="pointer-events-none"
+                  fill="white"
+                  fontSize="12"
                 >
                   {item.label}
+                </text>
+
+                <text
+                  x={x}
+                  y={y + 32}
+                  textAnchor="middle"
+                  fill="#9ca3af"
+                  fontSize="10"
+                >
+                  {item.count}
                 </text>
               </g>
             );
           })}
-
-          {/* Centro - Logo */}
-          <circle cx="400" cy="400" r="80" fill="rgba(142, 232, 203, 0.05)" stroke="rgba(142, 232, 203, 0.6)" strokeWidth="3" />
-          <circle cx="400" cy="400" r="75" fill="rgba(142, 232, 203, 0.02)" stroke="rgba(142, 232, 203, 0.3)" strokeWidth="1" />
-
-          {/* Logo Orbita */}
-          <text
-            x="400"
-            y="380"
-            textAnchor="middle"
-            fill="#8EE8CB"
-            fontSize="48"
-            fontWeight="700"
-            fontFamily="'Space Grotesk', sans-serif"
-          >
-            Orbita
-          </text>
-
-          {/* Nome do usuário */}
-          <text
-            x="400"
-            y="440"
-            textAnchor="middle"
-            fill="#a0a0a0"
-            fontSize="12"
-            fontFamily="'Inter', sans-serif"
-          >
-            Bem-vindo, {user?.name || "Designer"}
-          </text>
         </svg>
-      </div>
-
-      {/* Instruções */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center">
-        <p className="text-sm text-gray-400">Clique em qualquer círculo para navegar</p>
       </div>
     </div>
   );

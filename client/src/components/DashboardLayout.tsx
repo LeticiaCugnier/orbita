@@ -223,7 +223,7 @@ function DashboardLayoutContent({
               </button>
               {!isCollapsed ? (
                 <div className="flex items-center gap-2 min-w-0">
-                  <img src="/manus-storage/ChatGPTImage17dejun.de2026,10_11_24_4928288f.png" alt="Orbita Logo" className="h-8 w-8 object-contain" />
+                  <img src="/src/imgs/logo.png" alt="Orbita Logo" className="h-8 w-8 object-contain" />
                   <span className="font-semibold tracking-tight truncate text-primary">
                     Orbita
                   </span>

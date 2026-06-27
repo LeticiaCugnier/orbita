@@ -16,7 +16,9 @@ import BudgetsManagement from "./pages/BudgetsManagement";
 import Inicio from "./pages/Inicio";
 
 function Router() {
-  const { isAuthenticated, loading, error } = useAuth();
+  const isAuthenticated = true;
+  const loading = false;
+  const error = null;
 
   if (loading) {
     return (
@@ -25,29 +27,31 @@ function Router() {
       </div>
     );
   }
-
-  if (isAuthenticated && !error) {
+  // Login sempre acessível
+  if (!isAuthenticated || error) {
     return (
       <Switch>
-        <Route path="/" component={Inicio} />
-        <Route path="/dashboard" component={Home} />
-        <Route path="/projects" component={ProjectsManagement} />
-        <Route path="/briefing" component={() => <BriefingCreator projectId={1} />} />
-        <Route path="/contracts" component={ContractsManagement} />
-        <Route path="/client-area" component={ClientArea} />
-        <Route path="/budgets" component={BudgetsManagement} />
-        <Route path="/404" component={NotFound} />
-        <Route component={NotFound} />
+        <Route path="/" component={Landing} />
+        <Route path="/login" component={Login} />
+        <Route component={Login} />
       </Switch>
     );
   }
 
   return (
     <Switch>
-      <Route path="/" component={Landing} />
-      <Route path="/login" component={Login} />
+      <Route path="/" component={Inicio} />
+      <Route path="/dashboard" component={Home} />
+      <Route path="/projects" component={ProjectsManagement} />
+      <Route
+        path="/briefing"
+        component={() => <BriefingCreator projectId={1} />}
+      />
+      <Route path="/contracts" component={ContractsManagement} />
+      <Route path="/client-area" component={ClientArea} />
+      <Route path="/budgets" component={BudgetsManagement} />
       <Route path="/404" component={NotFound} />
-      <Route component={Landing} />
+      <Route component={NotFound} />
     </Switch>
   );
 }
@@ -57,34 +61,14 @@ function Router() {
 //   to keep consistent foreground/background color across components
 // - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
 
+
 function App() {
   return (
-    <ErrorBoundary>
-      <ThemeProvider
-        defaultTheme="dark"
-        switchable
-      >
-        {/* Video Background */}
-        <div className="video-background">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="w-full h-full object-cover"
-          >
-            <source src="/manus-storage/MOSHED-2026-6-14-12-26-37_e53708a1.webm" type="video/webm" />
-          </video>
-          <div className="video-background-overlay"></div>
-        </div>
-        
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
-      </ThemeProvider>
-    </ErrorBoundary>
+    <ThemeProvider defaultTheme="dark" switchable>
+      <Login />
+    </ThemeProvider>
   );
 }
+
 
 export default App;
