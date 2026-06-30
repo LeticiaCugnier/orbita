@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 
 import DashboardLayout from "@/components/DashboardLayout";
 
@@ -36,9 +36,16 @@ import {
   AlertCircle,
 } from "lucide-react";
 
+
+
 /* -------------------------------------------------------------------------- */
 /*                                   Dados                                    */
 /* -------------------------------------------------------------------------- */
+type ApprovalStatus =
+  | "pending"
+  | "approved"
+  | "rejected"
+  | "revision_requested";
 
 const mockApprovals = [
   {
@@ -116,7 +123,7 @@ const statusLabels: Record<string, string> = {
   revision_requested: "Revisão",
 };
 
-const statusIcons: Record<string, React.ReactNode> = {
+const statusIcons: Record<string, ReactNode> = {
   pending: <AlertCircle className="w-4 h-4" />,
   approved: <CheckCircle2 className="w-4 h-4" />,
   rejected: <XCircle className="w-4 h-4" />,
@@ -386,46 +393,69 @@ function ClientAreaContent() {
                 </TableHeader>
 
                 <TableBody>
-
                   {filteredApprovals.length === 0 ? (
-
                     <TableRow>
-
                       <TableCell
-
                         colSpan={7}
-
                         className="text-center py-14"
-
                       >
-
                         <div className="space-y-2">
-
                           <Search className="mx-auto h-10 w-10 text-muted-foreground" />
 
                           <p className="font-semibold">
-
                             Nenhum resultado encontrado
-
                           </p>
 
                           <p className="text-sm text-muted-foreground">
-
                             Tente alterar sua pesquisa.
-
                           </p>
-
                         </div>
-
                       </TableCell>
-
                     </TableRow>
-
                   ) : (
+                    filteredApprovals.map((approval) => (
+                      <TableRow
+                        key={approval.id}
+                        onClick={() => setSelectedApproval(approval)}
+                        className="cursor-pointer hover:bg-muted/40 transition-colors"
+                      >
+                        <TableCell>
+                          <div>
+                            <p className="font-semibold">
+                              {approval.title}
+                            </p>
 
+                            <p className="text-sm text-muted-foreground">
+                              {approval.project}
+                            </p>
+                          </div>
+                        </TableCell>
 
-                    filteredApprovals.map(...)
+                        <TableCell>{approval.client}</TableCell>
 
+                        <TableCell>{approval.designer}</TableCell>
+
+                        <TableCell>
+                          <Badge className={statusColors[approval.status]}>
+                            {statusIcons[approval.status]}
+                            <span className="ml-2">
+                              {statusLabels[approval.status]}
+                            </span>
+                          </Badge>
+                        </TableCell>
+
+                        <TableCell>{approval.comments}</TableCell>
+
+                        <TableCell>{approval.version}</TableCell>
+
+                        <TableCell className="text-right">
+                          <Button variant="ghost" size="icon">
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
                 </TableBody>
 
               </Table>
