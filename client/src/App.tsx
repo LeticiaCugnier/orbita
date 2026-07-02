@@ -14,6 +14,7 @@ import ContractsManagement from "./pages/ContractsManagement";
 import ClientArea from "./pages/ClientArea";
 import BudgetsManagement from "./pages/BudgetsManagement";
 import Inicio from "./pages/Inicio";
+import NewProject from "@/pages/NewProject";
 
 function Router() {
   const isAuthenticated = true;
@@ -43,6 +44,7 @@ function Router() {
       <Route path="/" component={Inicio} />
       <Route path="/dashboard" component={Home} />
       <Route path="/projects" component={ProjectsManagement} />
+      <Route path="/projects/new" component={NewProject} />
       <Route
         path="/briefing"
         component={() => <BriefingCreator projectId={1} />}

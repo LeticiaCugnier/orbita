@@ -194,580 +194,375 @@ function ClientAreaContent() {
   });
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 rounded-3xl bg-[#0B0F17] p-6">
+      {/* HERO */}
+      <div className="rounded-2xl border border-border/70 bg-gradient-to-br from-[#181A2E] via-[#111827] to-[#08232B] p-8 shadow-sm">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+          <div>
+            <Badge className="mb-4 bg-cyan-500/10 text-cyan-300 border border-cyan-400/40">
+              Área do Cliente Orbita
+            </Badge>
 
-      {/* ================= HEADER ================= */}
+            <h1 className="text-4xl font-bold tracking-tight text-white font-['Space_Grotesk']">
+              Área do Cliente ✨
+            </h1>
 
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight font-['Space_Grotesk']">
-            Área do Cliente
-          </h1>
-
-          <p className="text-muted-foreground mt-1">
-            Aprove peças, envie comentários e acompanhe todas as aprovações.
-          </p>
-        </div>
-
-        <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">
-
-          <Button
-            variant="outline"
-            className="gap-2 border-border/60"
-          >
-            <Filter className="w-4 h-4" />
-            Filtrar
-          </Button>
-
-          <div className="relative">
-
-            <Search
-              className="absolute left-3 top-1/2 -translate-y-1/2
-          h-4 w-4 text-muted-foreground"
-            />
-
-            <Input
-              placeholder="Buscar projeto..."
-
-              value={search}
-
-              onChange={(e) => setSearch(e.target.value)}
-
-              className="pl-10 w-full md:w-72"
-            />
-
+            <p className="text-slate-300 mt-3 max-w-xl">
+              Aprove peças, envie comentários e acompanhe todas as aprovações em um único lugar.
+            </p>
           </div>
 
-          <Button
-            className="gap-2 bg-violet-600 hover:bg-violet-700"
-          >
-            <Plus className="w-4 h-4" />
-            Novo Envio
-          </Button>
+          <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">
+            <Button
+              variant="outline"
+              className="gap-2 border-border/70 bg-transparent text-slate-300 hover:bg-white/5"
+            >
+              <Filter className="w-4 h-4" />
+              Filtrar
+            </Button>
 
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+
+              <Input
+                placeholder="Buscar projeto..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-10 w-full md:w-72 bg-[#111620] border-border/70 text-white placeholder:text-slate-500"
+              />
+            </div>
+
+            <Button className="gap-2 bg-[#8EE6D2] text-[#071014] hover:bg-[#A6F3E2]">
+              <Plus className="w-4 h-4" />
+              Novo Envio
+            </Button>
+          </div>
         </div>
-
       </div>
 
-      {/* ================= MÉTRICAS ================= */}
-
-      <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-
+      {/* MÉTRICAS */}
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {dashboardCards.map((card) => (
-
           <Card
             key={card.title}
-            className="border-border/40 bg-card/60 backdrop-blur"
+            className="rounded-2xl border border-border/70 bg-[#111620] p-6"
           >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-400">{card.title}</p>
 
-            <CardContent className="p-6">
+                <h2 className="text-3xl font-bold text-white mt-2">
+                  {card.value}
+                </h2>
 
-              <div className="flex items-center justify-between">
-
-                <div>
-
-                  <p className="text-sm text-muted-foreground">
-                    {card.title}
-                  </p>
-
-                  <h2 className="text-3xl font-bold mt-2">
-                    {card.value}
-                  </h2>
-
-                  <p
-                    className={`text-sm mt-2 font-medium ${card.color}`}
-                  >
-                    {card.variation} este mês
-                  </p>
-
-                </div>
-
-                <div
-                  className="w-12 h-12 rounded-xl
-              bg-violet-500/10
-              flex items-center justify-center"
-                >
-
-                  <CheckCircle2 className="w-6 h-6 text-violet-400" />
-
-                </div>
-
+                <p className={`text-xs mt-2 font-medium ${card.color}`}>
+                  {card.variation} este mês
+                </p>
               </div>
 
-            </CardContent>
-
+              <div className="w-12 h-12 rounded-xl bg-[#8EE6D2]/10 flex items-center justify-center">
+                <CheckCircle2 className="w-6 h-6 text-[#8EE6D2]" />
+              </div>
+            </div>
           </Card>
-
         ))}
-
       </div>
 
-      {/* ================= CONTEÚDO ================= */}
-
+      {/* CONTEÚDO */}
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
-
-        {/* ================= TABELA ================= */}
-
+        {/* LISTA */}
         <div className="xl:col-span-8">
+          <Card className="rounded-2xl border border-border/70 bg-[#111620] p-6">
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-white">
+                Aprovações
+              </h2>
 
-          <Card className="border-border/40 bg-card/60 backdrop-blur">
+              <p className="text-sm text-slate-400 mt-1">
+                Gerencie todas as peças enviadas ao cliente.
+              </p>
+            </div>
 
-            <CardHeader className="pb-3">
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
+              <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 h-auto rounded-2xl bg-[#0B0F17] border border-border/70 p-1 mb-6">
+                <TabsTrigger
+                  value="all"
+                  className="rounded-xl data-[state=active]:bg-[#8EE6D2] data-[state=active]:text-[#071014]"
+                >
+                  Todas
+                </TabsTrigger>
 
-              <div className="flex items-center justify-between">
+                <TabsTrigger
+                  value="pending"
+                  className="rounded-xl data-[state=active]:bg-[#8EE6D2] data-[state=active]:text-[#071014]"
+                >
+                  Pendentes
+                </TabsTrigger>
 
-                <div>
+                <TabsTrigger
+                  value="approved"
+                  className="rounded-xl data-[state=active]:bg-[#8EE6D2] data-[state=active]:text-[#071014]"
+                >
+                  Aprovadas
+                </TabsTrigger>
 
-                  <CardTitle>
-                    Aprovações
-                  </CardTitle>
+                <TabsTrigger
+                  value="revision"
+                  className="rounded-xl data-[state=active]:bg-[#8EE6D2] data-[state=active]:text-[#071014]"
+                >
+                  Revisão
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
 
-                  <CardDescription>
-                    Gerencie todas as peças enviadas ao cliente.
-                  </CardDescription>
+            <div className="space-y-3">
+              {filteredApprovals.length === 0 ? (
+                <Card className="p-12 text-center border-dashed bg-[#0B0F17] border-border/70">
+                  <Search className="mx-auto h-10 w-10 text-slate-500 mb-3" />
+                  <p className="font-semibold text-white">
+                    Nenhum resultado encontrado
+                  </p>
+                  <p className="text-sm text-slate-400 mt-1">
+                    Tente alterar sua pesquisa.
+                  </p>
+                </Card>
+              ) : (
+                filteredApprovals.map((approval) => (
+                  <Card
+                    key={approval.id}
+                    onClick={() => setSelectedApproval(approval)}
+                    className="rounded-2xl border border-border/70 bg-[#0B0F17] p-5 hover:border-[#8EE6D2]/50 transition-all cursor-pointer"
+                  >
+                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+                      <div className="flex items-start gap-4 min-w-0">
+                        <div className="h-12 w-12 rounded-xl bg-[#8EE6D2]/10 flex items-center justify-center shrink-0">
+                          <Upload className="w-5 h-5 text-[#8EE6D2]" />
+                        </div>
 
-                </div>
+                        <div className="min-w-0">
+                          <h3 className="font-semibold text-white text-lg truncate">
+                            {approval.title}
+                          </h3>
 
-              </div>
-
-            </CardHeader>
-
-            <CardContent>
-
-              {/* Tabs */}
-
-              <Tabs
-                value={activeTab}
-                onValueChange={setActiveTab}
-              >
-
-                <TabsList className="mb-5">
-
-                  <TabsTrigger value="all">
-                    Todas
-                  </TabsTrigger>
-
-                  <TabsTrigger value="pending">
-                    Pendentes
-                  </TabsTrigger>
-
-                  <TabsTrigger value="approved">
-                    Aprovadas
-                  </TabsTrigger>
-
-                  <TabsTrigger value="revision">
-                    Revisão
-                  </TabsTrigger>
-
-                </TabsList>
-
-              </Tabs>
-
-              {/* Tabela */}
-
-              <Table>
-
-                <TableHeader>
-
-                  <TableRow>
-
-                    <TableHead>Projeto</TableHead>
-
-                    <TableHead>Cliente</TableHead>
-
-                    <TableHead>Designer</TableHead>
-
-                    <TableHead>Status</TableHead>
-
-                    <TableHead>Comentários</TableHead>
-
-                    <TableHead>Versão</TableHead>
-
-                    <TableHead className="text-right">
-                      Ações
-                    </TableHead>
-
-                  </TableRow>
-
-                </TableHeader>
-
-                <TableBody>
-                  {filteredApprovals.length === 0 ? (
-                    <TableRow>
-                      <TableCell
-                        colSpan={7}
-                        className="text-center py-14"
-                      >
-                        <div className="space-y-2">
-                          <Search className="mx-auto h-10 w-10 text-muted-foreground" />
-
-                          <p className="font-semibold">
-                            Nenhum resultado encontrado
+                          <p className="text-sm text-slate-400">
+                            {approval.project}
                           </p>
 
-                          <p className="text-sm text-muted-foreground">
-                            Tente alterar sua pesquisa.
+                          <p className="text-xs text-slate-500 mt-1">
+                            Cliente: {approval.client}
                           </p>
                         </div>
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    filteredApprovals.map((approval) => (
-                      <TableRow
-                        key={approval.id}
-                        onClick={() => setSelectedApproval(approval)}
-                        className="cursor-pointer hover:bg-muted/40 transition-colors"
-                      >
-                        <TableCell>
-                          <div>
-                            <p className="font-semibold">
-                              {approval.title}
-                            </p>
+                      </div>
 
-                            <p className="text-sm text-muted-foreground">
-                              {approval.project}
-                            </p>
-                          </div>
-                        </TableCell>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 lg:w-[420px]">
+                        <div className="rounded-xl bg-white/[0.03] border border-white/10 p-3">
+                          <p className="text-xs text-slate-500">Designer</p>
+                          <p className="font-semibold text-white">
+                            {approval.designer}
+                          </p>
+                        </div>
 
-                        <TableCell>{approval.client}</TableCell>
+                        <div className="rounded-xl bg-white/[0.03] border border-white/10 p-3">
+                          <p className="text-xs text-slate-500">Versão</p>
+                          <p className="font-semibold text-white">
+                            {approval.version}
+                          </p>
+                        </div>
 
-                        <TableCell>{approval.designer}</TableCell>
-
-                        <TableCell>
-                          <Badge className={statusColors[approval.status]}>
+                        <div className="rounded-xl bg-white/[0.03] border border-white/10 p-3">
+                          <p className="text-xs text-slate-500">Status</p>
+                          <Badge className={`gap-2 mt-1 ${statusColors[approval.status]}`}>
                             {statusIcons[approval.status]}
-                            <span className="ml-2">
-                              {statusLabels[approval.status]}
-                            </span>
+                            {statusLabels[approval.status]}
                           </Badge>
-                        </TableCell>
+                        </div>
+                      </div>
 
-                        <TableCell>{approval.comments}</TableCell>
-
-                        <TableCell>{approval.version}</TableCell>
-
-                        <TableCell className="text-right">
-                          <Button variant="ghost" size="icon">
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-
-              </Table>
-
-            </CardContent>
-
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-border/70 bg-transparent text-slate-300 hover:bg-white/5"
+                      >
+                        <Eye className="w-4 h-4 mr-2" />
+                        Ver
+                      </Button>
+                    </div>
+                  </Card>
+                ))
+              )}
+            </div>
           </Card>
-
         </div>
 
-        {/* Painel direito será criado na Parte 4 */}
-
+        {/* PAINEL DIREITO */}
         <div className="xl:col-span-4">
-
           {selectedApproval && (
-
             <div className="sticky top-6 space-y-5">
-
-              {/* ================= DETALHES ================= */}
-
-              <Card className="border-border/40 bg-card/60 backdrop-blur">
-
-                <CardHeader>
-
-                  <CardTitle className="text-xl">
+              <Card className="rounded-2xl border border-border/70 bg-[#111620] p-6">
+                <div className="mb-6">
+                  <h2 className="text-xl font-bold text-white">
                     {selectedApproval.title}
-                  </CardTitle>
+                  </h2>
 
-                  <CardDescription>
+                  <p className="text-sm text-slate-400 mt-1">
                     {selectedApproval.project}
-                  </CardDescription>
+                  </p>
+                </div>
 
-                </CardHeader>
-
-                <CardContent className="space-y-6">
-
-                  {/* Status */}
-
+                <div className="space-y-5">
                   <div>
-
-                    <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">
+                    <p className="text-xs uppercase tracking-wider text-slate-500 mb-2">
                       Status
                     </p>
 
-                    <Badge
-                      className={`gap-2 ${statusColors[selectedApproval.status]}`}
-                    >
+                    <Badge className={`gap-2 ${statusColors[selectedApproval.status]}`}>
                       {statusIcons[selectedApproval.status]}
                       {statusLabels[selectedApproval.status]}
                     </Badge>
-
                   </div>
 
-                  {/* Informações */}
+                  <div className="space-y-3">
+                    {[
+                      ["Cliente", selectedApproval.client],
+                      ["Designer", selectedApproval.designer],
+                      ["Versão", selectedApproval.version],
+                      ["Data", selectedApproval.createdAt],
+                      ["Comentários", selectedApproval.comments],
+                    ].map(([label, value]) => (
+                      <div
+                        key={label}
+                        className="flex justify-between rounded-xl border border-white/10 bg-white/[0.03] p-3"
+                      >
+                        <span className="text-sm text-slate-500">
+                          {label}
+                        </span>
 
-                  <div className="space-y-4">
-
-                    <div className="flex justify-between">
-
-                      <span className="text-muted-foreground">
-                        Cliente
-                      </span>
-
-                      <span className="font-medium">
-                        {selectedApproval.client}
-                      </span>
-
-                    </div>
-
-                    <div className="flex justify-between">
-
-                      <span className="text-muted-foreground">
-                        Designer
-                      </span>
-
-                      <span className="font-medium">
-                        {selectedApproval.designer}
-                      </span>
-
-                    </div>
-
-                    <div className="flex justify-between">
-
-                      <span className="text-muted-foreground">
-                        Versão
-                      </span>
-
-                      <span className="font-medium">
-                        {selectedApproval.version}
-                      </span>
-
-                    </div>
-
-                    <div className="flex justify-between">
-
-                      <span className="text-muted-foreground">
-                        Data
-                      </span>
-
-                      <span className="font-medium">
-                        {selectedApproval.createdAt}
-                      </span>
-
-                    </div>
-
-                    <div className="flex justify-between">
-
-                      <span className="text-muted-foreground">
-                        Comentários
-                      </span>
-
-                      <span className="font-medium">
-                        {selectedApproval.comments}
-                      </span>
-
-                    </div>
-
+                        <span className="text-sm font-semibold text-white">
+                          {value}
+                        </span>
+                      </div>
+                    ))}
                   </div>
-
-                  {/* Download */}
 
                   <Button
                     variant="outline"
-                    className="w-full gap-2"
+                    className="w-full gap-2 border-border/70 bg-transparent text-slate-300 hover:bg-white/5"
                   >
                     <Download className="w-4 h-4" />
                     Baixar Arquivo
                   </Button>
-
-                </CardContent>
-
+                </div>
               </Card>
-              {/* Preview */}
 
-              <Card className="border-border/40 bg-card/60">
+              <Card className="rounded-2xl border border-border/70 bg-[#111620] p-6">
+                <h2 className="text-xl font-bold text-white mb-4">
+                  Preview
+                </h2>
 
-                <CardHeader>
+                <div className="aspect-video rounded-2xl border border-dashed border-border/70 flex items-center justify-center bg-[#0B0F17]">
+                  <div className="text-center">
+                    <Eye className="mx-auto h-8 w-8 text-slate-500 mb-3" />
 
-                  <CardTitle>
-                    Preview
-                  </CardTitle>
-
-                </CardHeader>
-
-                <CardContent>
-
-                  <div
-                    className="
-          aspect-video
-          rounded-lg
-          border
-          border-dashed
-          border-border
-          flex
-          items-center
-          justify-center
-          bg-muted/30
-          "
-                  >
-
-                    <div className="text-center">
-
-                      <Eye className="mx-auto h-8 w-8 text-muted-foreground mb-3" />
-
-                      <p className="text-sm text-muted-foreground">
-
-                        Visualização da peça
-
-                      </p>
-
-                    </div>
-
+                    <p className="text-sm text-slate-400">
+                      Visualização da peça
+                    </p>
                   </div>
-
-                </CardContent>
-
+                </div>
               </Card>
 
-              {/* ================= COMENTÁRIOS ================= */}
-
-              <Card className="border-border/40 bg-card/60 backdrop-blur">
-
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <MessageSquare className="w-5 h-5" />
+              <Card className="rounded-2xl border border-border/70 bg-[#111620] p-6">
+                <div className="mb-5">
+                  <h2 className="flex items-center gap-2 text-xl font-bold text-white">
+                    <MessageSquare className="w-5 h-5 text-[#8EE6D2]" />
                     Comentários
-                  </CardTitle>
+                  </h2>
 
-                  <CardDescription>
+                  <p className="text-sm text-slate-400 mt-1">
                     Converse com o designer sobre esta peça.
-                  </CardDescription>
-                </CardHeader>
+                  </p>
+                </div>
 
-                <CardContent className="space-y-5">
-
-                  <div className="space-y-4 max-h-80 overflow-y-auto pr-2">
-
-                    {/* Designer */}
-
-                    <div className="flex gap-3">
-
-                      <div className="h-10 w-10 rounded-full bg-violet-500 flex items-center justify-center text-white font-semibold">
-                        D
-                      </div>
-
-                      <div className="flex-1 rounded-xl bg-muted p-4">
-
-                        <div className="flex items-center justify-between">
-
-                          <span className="font-semibold">
-                            Designer
-                          </span>
-
-                          <span className="text-xs text-muted-foreground">
-                            10 Jun • 09:15
-                          </span>
-
-                        </div>
-
-                        <p className="text-sm text-muted-foreground mt-2">
-                          Finalizei a primeira versão conforme o briefing.
-                          Caso deseje alterar cores ou tipografia basta comentar abaixo.
-                        </p>
-
-                      </div>
-
+                <div className="space-y-4 max-h-80 overflow-y-auto pr-2">
+                  <div className="flex gap-3">
+                    <div className="h-10 w-10 rounded-full bg-[#8EE6D2]/10 text-[#8EE6D2] flex items-center justify-center font-semibold">
+                      D
                     </div>
 
-                    {/* Cliente */}
+                    <div className="flex-1 rounded-xl bg-[#0B0F17] border border-white/10 p-4">
+                      <div className="flex items-center justify-between">
+                        <span className="font-semibold text-white">
+                          Designer
+                        </span>
 
-                    <div className="flex gap-3 justify-end">
-
-                      <div className="flex-1 max-w-[90%] rounded-xl bg-violet-600 p-4 text-white">
-
-                        <div className="flex items-center justify-between">
-
-                          <span className="font-semibold">
-                            Você
-                          </span>
-
-                          <span className="text-xs text-violet-200">
-                            10 Jun • 10:42
-                          </span>
-
-                        </div>
-
-                        <p className="text-sm mt-2">
-                          Gostei bastante da direção. Podemos testar uma versão com tons mais claros?
-                        </p>
-
+                        <span className="text-xs text-slate-500">
+                          10 Jun • 09:15
+                        </span>
                       </div>
 
+                      <p className="text-sm text-slate-400 mt-2">
+                        Finalizei a primeira versão conforme o briefing.
+                        Caso deseje alterar cores ou tipografia basta comentar abaixo.
+                      </p>
                     </div>
-
                   </div>
 
-                  <div className="border-t pt-4 space-y-3">
+                  <div className="flex gap-3 justify-end">
+                    <div className="flex-1 max-w-[90%] rounded-xl bg-[#8EE6D2] p-4 text-[#071014]">
+                      <div className="flex items-center justify-between">
+                        <span className="font-semibold">
+                          Você
+                        </span>
 
-                    <Textarea
-                      rows={4}
-                      placeholder="Escreva um comentário..."
-                      value={comment}
-                      onChange={(e) => setComment(e.target.value)}
-                      className="resize-none"
-                    />
+                        <span className="text-xs text-[#071014]/70">
+                          10 Jun • 10:42
+                        </span>
+                      </div>
 
-                    <Button className="w-full">
-                      <MessageSquare className="w-4 h-4 mr-2" />
-                      Enviar Comentário
-                    </Button>
-
+                      <p className="text-sm mt-2">
+                        Gostei bastante da direção. Podemos testar uma versão com tons mais claros?
+                      </p>
+                    </div>
                   </div>
+                </div>
 
-                </CardContent>
+                <div className="border-t border-white/10 pt-4 mt-5 space-y-3">
+                  <Textarea
+                    rows={4}
+                    placeholder="Escreva um comentário..."
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    className="resize-none bg-[#0B0F17] border-border/70 text-white placeholder:text-slate-500"
+                  />
 
+                  <Button className="w-full bg-[#8EE6D2] text-[#071014] hover:bg-[#A6F3E2]">
+                    <MessageSquare className="w-4 h-4 mr-2" />
+                    Enviar Comentário
+                  </Button>
+                </div>
               </Card>
-
-              {/* ================= AÇÕES ================= */}
-
-              <Card className="border-border/40 bg-card/60 backdrop-blur">
-
-                <CardHeader>
-
-                  <CardTitle>
+              <Card className="rounded-2xl border border-border/70 bg-[#111620] p-6">
+                <div className="mb-5">
+                  <h2 className="text-xl font-bold text-white">
                     Aprovação
-                  </CardTitle>
+                  </h2>
 
-                  <CardDescription>
+                  <p className="text-sm text-slate-400 mt-1">
                     Escolha uma ação para esta peça.
-                  </CardDescription>
+                  </p>
+                </div>
 
-                </CardHeader>
-
-                <CardContent className="space-y-3">
-
-                  <Button
-                    className="w-full bg-green-600 hover:bg-green-700"
-                  >
+                <div className="space-y-3">
+                  <Button className="w-full bg-green-600 hover:bg-green-700 text-white">
                     <CheckCircle2 className="mr-2 h-4 w-4" />
-
                     Aprovar
-
                   </Button>
 
                   <Button
                     variant="outline"
-                    className="w-full border-yellow-500/40 text-yellow-400 hover:bg-yellow-500/10"
+                    className="w-full border-orange-500/40 text-orange-400 bg-transparent hover:bg-orange-500/10"
                   >
                     <AlertCircle className="mr-2 h-4 w-4" />
-
                     Solicitar Revisão
-
                   </Button>
 
                   <Button
@@ -775,79 +570,52 @@ function ClientAreaContent() {
                     className="w-full"
                   >
                     <XCircle className="mr-2 h-4 w-4" />
-
                     Rejeitar
-
                   </Button>
-
-                </CardContent>
-
+                </div>
               </Card>
 
+              <Card className="rounded-2xl border border-border/70 bg-[#111620] p-6">
+                <h2 className="text-xl font-bold text-white mb-5">
+                  Histórico
+                </h2>
 
-
-              {/* ================= HISTÓRICO ================= */}
-
-              <Card className="border-border/40 bg-card/60 backdrop-blur">
-
-                <CardHeader>
-
-                  <CardTitle>
-                    Histórico
-                  </CardTitle>
-
-                </CardHeader>
-
-                <CardContent className="space-y-4">
-
-                  <div className="border-l-2 border-violet-500 pl-4">
-
-                    <p className="font-medium">
+                <div className="space-y-4">
+                  <div className="border-l-2 border-[#8EE6D2] pl-4">
+                    <p className="font-medium text-white">
                       Arquivo enviado
                     </p>
 
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-slate-400">
                       {selectedApproval.createdAt}
                     </p>
-
                   </div>
 
                   <div className="border-l-2 border-blue-500 pl-4">
-
-                    <p className="font-medium">
+                    <p className="font-medium text-white">
                       Cliente visualizou
                     </p>
 
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-slate-400">
                       Há 2 horas
                     </p>
-
                   </div>
 
                   <div className="border-l-2 border-orange-500 pl-4">
-
-                    <p className="font-medium">
+                    <p className="font-medium text-white">
                       Aguardando decisão
                     </p>
 
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-slate-400">
                       Em andamento
                     </p>
-
                   </div>
-
-                </CardContent>
-
+                </div>
               </Card>
-
             </div>
-
           )}
-
         </div>
-
       </div>
-
     </div>
   );
 }

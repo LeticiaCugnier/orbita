@@ -22,11 +22,11 @@ import {
   Filter,
   Calendar,
   Users,
-  MoreHorizontal,
 } from "lucide-react";
 
 import { trpc } from "@/lib/trpc";
 import { useLocation } from "wouter";
+import NewProject from "@/pages/NewProject";
 
 const statusColors: Record<string, string> = {
   briefing: "bg-cyan-500/10 text-cyan-400 border-cyan-500/30",
@@ -70,122 +70,141 @@ export default function ProjectsManagement() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-8">
+      <div className="space-y-6 rounded-3xl bg-[#0B0F17] p-6">
         {/* HEADER */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-4xl font-bold font-['Space_Grotesk']">
-              Projetos
-            </h1>
-            <p className="text-zinc-400 mt-2">
-              Gerencie todos os projetos da sua empresa em um único lugar.
-            </p>
-          </div>
+        <div className="rounded-2xl border border-border/70 bg-gradient-to-br from-[#181A2E] via-[#111827] to-[#08232B] p-8 shadow-sm">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            <div>
+              <Badge className="mb-4 bg-cyan-500/10 text-cyan-300 border border-cyan-400/40">
+                Projetos Orbita
+              </Badge>
 
-          <div className="flex items-center gap-3">
-            <Button variant="outline" className="border-white/10">
-              <Filter className="w-4 h-4 mr-2" />
-              Filtrar
-            </Button>
+              <h1 className="text-4xl font-bold tracking-tight text-white font-['Space_Grotesk']">
+                Projetos 🚀
+              </h1>
 
-            <Button
-              variant={viewMode === "kanban" ? "default" : "outline"}
-              onClick={() => setViewMode("kanban")}
-            >
-              <LayoutGrid className="w-4 h-4 mr-2" />
-              Kanban
-            </Button>
+              <p className="text-slate-300 mt-3 max-w-xl">
+                Gerencie todos os projetos da sua empresa em um único lugar.
+              </p>
+            </div>
 
-            <Button
-              variant={viewMode === "list" ? "default" : "outline"}
-              onClick={() => setViewMode("list")}
-            >
-              <List className="w-4 h-4 mr-2" />
-              Lista
-            </Button>
+            <div className="flex flex-col sm:flex-row flex-wrap gap-3">
+              <Button
+                variant="outline"
+                className="border-border/70 bg-transparent text-slate-300 hover:bg-white/5"
+              >
+                <Filter className="w-4 h-4 mr-2" />
+                Filtrar
+              </Button>
 
-            <Button
-              className="bg-gradient-to-r from-violet-600 to-blue-600"
-              onClick={() => setLocation("/projects/new")}
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Novo Projeto
-            </Button>
+              <Button
+                variant="outline"
+                onClick={() => setViewMode("kanban")}
+                className={
+                  viewMode === "kanban"
+                    ? "bg-[#8EE6D2] text-[#071014] hover:bg-[#A6F3E2] border-transparent"
+                    : "border-border/70 bg-transparent text-slate-300 hover:bg-white/5"
+                }
+              >
+                <LayoutGrid className="w-4 h-4 mr-2" />
+                Kanban
+              </Button>
+
+              <Button
+                variant="outline"
+                onClick={() => setViewMode("list")}
+                className={
+                  viewMode === "list"
+                    ? "bg-[#8EE6D2] text-[#071014] hover:bg-[#A6F3E2] border-transparent"
+                    : "border-border/70 bg-transparent text-slate-300 hover:bg-white/5"
+                }
+              >
+                <List className="w-4 h-4 mr-2" />
+                Lista
+              </Button>
+
+              <Button
+                className="bg-[#8EE6D2] text-[#071014] hover:bg-[#A6F3E2]"
+                onClick={() => setLocation("/projects/new")}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Novo Projeto
+              </Button>
+            </div>
           </div>
         </div>
 
         {/* CARDS SUPERIORES */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
-          <Card className="bg-gradient-to-br from-cyan-500/10 to-slate-900 border-cyan-500/20">
-            <CardContent className="p-6">
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-xs uppercase tracking-wider text-cyan-300">
-                    Total de Projetos
-                  </p>
-                  <h2 className="text-4xl font-bold mt-2">{projects.length}</h2>
-                  <p className="text-green-400 text-xs mt-2">+12% este mês</p>
-                </div>
-                <div className="w-14 h-14 rounded-xl bg-cyan-500/20 flex items-center justify-center">
-                  <Folder className="w-7 h-7 text-cyan-300" />
-                </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+          <Card className="rounded-2xl border border-border/70 bg-[#111620] p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-400">Total de Projetos</p>
+
+                <h2 className="text-3xl font-bold text-white mt-2">
+                  {projects.length}
+                </h2>
+
+                <p className="text-xs text-cyan-400 mt-2">+12% este mês</p>
               </div>
-            </CardContent>
+
+              <div className="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center">
+                <Folder className="w-6 h-6 text-cyan-400" />
+              </div>
+            </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-blue-500/10 to-slate-900 border-blue-500/20">
-            <CardContent className="p-6">
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-xs uppercase tracking-wider text-blue-300">
-                    Em andamento
-                  </p>
-                  <h2 className="text-4xl font-bold mt-2">
-                    {getProjectsByStatus("creation").length}
-                  </h2>
-                  <p className="text-cyan-400 text-xs mt-2">+8% este mês</p>
-                </div>
-                <div className="w-14 h-14 rounded-xl bg-blue-500/20 flex items-center justify-center">
-                  <Clock3 className="w-7 h-7 text-blue-300" />
-                </div>
+          <Card className="rounded-2xl border border-border/70 bg-[#111620] p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-400">Em andamento</p>
+
+                <h2 className="text-3xl font-bold text-white mt-2">
+                  {getProjectsByStatus("creation").length}
+                </h2>
+
+                <p className="text-xs text-blue-400 mt-2">+8% este mês</p>
               </div>
-            </CardContent>
+
+              <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center">
+                <Clock3 className="w-6 h-6 text-blue-400" />
+              </div>
+            </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-green-500/10 to-slate-900 border-green-500/20">
-            <CardContent className="p-6">
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-xs uppercase tracking-wider text-green-300">
-                    Concluídos
-                  </p>
-                  <h2 className="text-4xl font-bold mt-2">
-                    {getProjectsByStatus("delivery").length}
-                  </h2>
-                  <p className="text-green-400 text-xs mt-2">+15% este mês</p>
-                </div>
-                <div className="w-14 h-14 rounded-xl bg-green-500/20 flex items-center justify-center">
-                  <CheckCircle2 className="w-7 h-7 text-green-300" />
-                </div>
+          <Card className="rounded-2xl border border-border/70 bg-[#111620] p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-400">Concluídos</p>
+
+                <h2 className="text-3xl font-bold text-white mt-2">
+                  {getProjectsByStatus("delivery").length}
+                </h2>
+
+                <p className="text-xs text-green-400 mt-2">+15% este mês</p>
               </div>
-            </CardContent>
+
+              <div className="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center">
+                <CheckCircle2 className="w-6 h-6 text-green-400" />
+              </div>
+            </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-red-500/10 to-slate-900 border-red-500/20">
-            <CardContent className="p-6">
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-xs uppercase tracking-wider text-red-300">
-                    Atrasados
-                  </p>
-                  <h2 className="text-4xl font-bold">4</h2>
-                  <p className="text-red-400 text-xs mt-2">-3% este mês</p>
-                </div>
-                <div className="w-14 h-14 rounded-xl bg-red-500/20 flex items-center justify-center">
-                  <AlertTriangle className="w-7 h-7 text-red-300" />
-                </div>
+          <Card className="rounded-2xl border border-border/70 bg-[#111620] p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-400">Atrasados</p>
+
+                <h2 className="text-3xl font-bold text-white mt-2">
+                  4
+                </h2>
+
+                <p className="text-xs text-red-400 mt-2">-3% este mês</p>
               </div>
-            </CardContent>
+              <div className="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center">
+                <AlertTriangle className="w-6 h-6 text-red-400" />
+              </div>
+            </div>
           </Card>
         </div>
 
@@ -201,24 +220,24 @@ export default function ProjectsManagement() {
                   const filteredProjects = getProjectsByStatus(status);
                   return (
                     <div key={status} className="w-[360px] flex-shrink-0">
-                      <div className="rounded-3xl border border-white/10 bg-[#0f172a]/80 backdrop-blur-xl p-5">
+                      <div className="rounded-2xl border border-border/70 bg-[#111620] p-5">
                         {/* Cabeçalho da coluna */}
                         <div className="flex items-center justify-between mb-5">
                           <div className="flex items-center gap-3">
                             <div
                               className={`w-3 h-3 rounded-full ${status === "briefing"
-                                  ? "bg-cyan-400"
-                                  : status === "research"
-                                    ? "bg-violet-400"
-                                    : status === "creation"
-                                      ? "bg-blue-400"
-                                      : status === "approval"
-                                        ? "bg-orange-400"
-                                        : status === "adjustments"
-                                          ? "bg-yellow-400"
-                                          : status === "finalization"
-                                            ? "bg-green-400"
-                                            : "bg-emerald-400"
+                                ? "bg-cyan-400"
+                                : status === "research"
+                                  ? "bg-violet-400"
+                                  : status === "creation"
+                                    ? "bg-blue-400"
+                                    : status === "approval"
+                                      ? "bg-orange-400"
+                                      : status === "adjustments"
+                                        ? "bg-yellow-400"
+                                        : status === "finalization"
+                                          ? "bg-green-400"
+                                          : "bg-emerald-400"
                                 }`}
                             />
                             <div>
@@ -230,7 +249,7 @@ export default function ProjectsManagement() {
                               </p>
                             </div>
                           </div>
-                          <Badge variant="secondary">
+                          <Badge className="bg-[#8EE6D2]/10 text-[#8EE6D2] border border-[#8EE6D2]/40">
                             {filteredProjects.length}
                           </Badge>
                         </div>
@@ -240,7 +259,7 @@ export default function ProjectsManagement() {
                           {filteredProjects.map((project: any) => (
                             <Card
                               key={project.id}
-                              className="bg-slate-900/80 border-white/10 hover:border-cyan-500/40 transition-all duration-300 cursor-pointer hover:scale-[1.02]"
+                              className="rounded-2xl border border-border/70 bg-[#0B0F17] hover:border-[#8EE6D2]/50 transition-all cursor-pointer"
                             >
                               <CardContent className="p-5">
                                 <div className="flex justify-between items-start mb-4">
@@ -265,9 +284,9 @@ export default function ProjectsManagement() {
                                       {project.progress}%
                                     </span>
                                   </div>
-                                  <div className="w-full h-2 rounded-full bg-slate-800">
+                                  <div className="w-full h-2 rounded-full bg-white/10">
                                     <div
-                                      className="h-2 rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-violet-500"
+                                      className="h-2 rounded-full bg-[#8EE6D2]"
                                       style={{ width: `${project.progress}%` }}
                                     />
                                   </div>
@@ -298,8 +317,8 @@ export default function ProjectsManagement() {
                           ))}
 
                           {filteredProjects.length === 0 && (
-                            <div className="rounded-2xl border border-dashed border-white/10 p-8 text-center">
-                              <p className="text-zinc-500 text-sm">
+                            <div className="rounded-2xl border border-dashed border-border/70 bg-[#0B0F17] p-8 text-center">
+                              <p className="text-slate-500 text-sm">
                                 Nenhum projeto nesta etapa
                               </p>
                             </div>
@@ -342,9 +361,9 @@ export default function ProjectsManagement() {
                               {project.progress}%
                             </span>
                           </div>
-                          <div className="w-full h-2 rounded-full bg-slate-800">
+                          <div className="w-full h-2 rounded-full bg-white/10">
                             <div
-                              className="h-2 rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-violet-500"
+                              className="h-2 rounded-full bg-[#8EE6D2]"
                               style={{ width: `${project.progress}%` }}
                             />
                           </div>

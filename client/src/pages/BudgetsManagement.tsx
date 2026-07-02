@@ -10,6 +10,14 @@ import { Plus, Eye, Check, X, ArrowRight, ShoppingCart } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import DashboardLayout from "@/components/DashboardLayout";
 import { toast } from "sonner";
+import {
+  Palette,
+  Megaphone,
+  Shirt,
+  Lightbulb,
+  PenTool,
+  Layers
+} from "lucide-react";
 
 interface BudgetFormData {
   clientName: string;
@@ -63,6 +71,7 @@ const pricingTableData = [
 
 function BudgetsManagementContent() {
   const [activeTab, setActiveTab] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState<BudgetFormData>({
     clientName: "",
@@ -218,17 +227,17 @@ function BudgetsManagementContent() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "draft":
-        return "bg-muted";
+        return "bg-muted text-muted-foreground border-border";
       case "sent":
-        return "bg-secondary";
+        return "bg-blue-500/10 text-blue-500 border-blue-500/30";
       case "approved":
-        return "bg-primary";
+        return "bg-green-500/10 text-green-500 border-green-500/30";
       case "rejected":
-        return "bg-destructive";
+        return "bg-destructive/10 text-destructive border-destructive/30";
       case "finalized":
-        return "bg-accent";
+        return "bg-primary/10 text-primary border-primary/30";
       default:
-        return "bg-muted";
+        return "bg-muted text-muted-foreground border-border";
     }
   };
 
@@ -255,234 +264,414 @@ function BudgetsManagementContent() {
   };
 
   const renderBudgetCard = (budget: any) => (
-    <Card key={budget.id} className="p-4 border-border hover:shadow-lg transition-shadow">
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex-1">
-          <h3 className="font-semibold text-foreground text-lg">{budget.projectTitle}</h3>
-          <p className="text-sm text-muted-foreground">{budget.clientName}</p>
-        </div>
-        <Badge className={`${getStatusColor(budget.status)} text-white`}>
-          {getStatusLabel(budget.status)}
-        </Badge>
-      </div>
+    <Card
+      key={budget.id}
+      className="rounded-2xl border border-border/70 bg-[#111620] p-5 hover:border-[#8EE6D2]/50 transition-all"
+    >
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+        <div className="flex items-start gap-4 min-w-0">
+          <div className="h-12 w-12 rounded-xl bg-[#8EE6D2]/10 flex items-center justify-center shrink-0">
+            <ShoppingCart className="w-5 h-5 text-[#8EE6D2]" />
+          </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-4">
-        <div>
-          <p className="text-xs text-muted-foreground">Valor</p>
-          <p className="font-semibold text-foreground">{budget.amount}</p>
-        </div>
-        <div>
-          <p className="text-xs text-muted-foreground">Válido até</p>
-          <p className="text-sm text-foreground">{budget.validUntil.toLocaleDateString("pt-BR")}</p>
-        </div>
-      </div>
+          <div className="min-w-0">
+            <h3 className="font-semibold text-white text-lg truncate">
+              {budget.projectTitle}
+            </h3>
 
-      <div className="flex gap-2">
-        <Button size="sm" variant="outline" className="flex-1" onClick={() => handleVisualize(budget.id)}>
-          <Eye className="w-4 h-4 mr-2" />
-          Visualizar
-        </Button>
+            <p className="text-sm text-slate-400">
+              {budget.clientName}
+            </p>
 
-        {budget.status === "draft" && (
+            <p className="text-xs text-slate-500 mt-1">
+              Criado em {budget.createdAt.toLocaleDateString("pt-BR")}
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 lg:w-[420px]">
+          <div className="rounded-xl bg-white/[0.03] border border-white/10 p-3">
+            <p className="text-xs text-slate-500">Valor</p>
+            <p className="font-semibold text-white">{budget.amount}</p>
+          </div>
+
+          <div className="rounded-xl bg-white/[0.03] border border-white/10 p-3">
+            <p className="text-xs text-slate-500">Válido até</p>
+            <p className="font-semibold text-white">
+              {budget.validUntil.toLocaleDateString("pt-BR")}
+            </p>
+          </div>
+
+          <div className="rounded-xl bg-white/[0.03] border border-white/10 p-3">
+            <p className="text-xs text-slate-500">Status</p>
+            <Badge className={`${getStatusColor(budget.status)} border mt-1`}>
+              {getStatusLabel(budget.status)}
+            </Badge>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap lg:flex-nowrap gap-2">
           <Button
             size="sm"
-            variant="default"
-            className="flex-1"
-            onClick={() => handleStatusChange(budget.id, "sent")}
+            variant="outline"
+            className="border-border/70 bg-transparent text-slate-300 hover:bg-white/5"
+            onClick={() => handleVisualize(budget.id)}
           >
-            Enviar
+            <Eye className="w-4 h-4 mr-2" />
+            Ver
           </Button>
-        )}
 
-        {budget.status === "sent" && (
-          <>
+          {budget.status === "draft" && (
             <Button
               size="sm"
-              variant="default"
-              className="flex-1 bg-green-600 hover:bg-green-700"
-              onClick={() => handleStatusChange(budget.id, "approved")}
+              className="bg-[#8EE6D2] text-[#071014] hover:bg-[#A6F3E2]"
+              onClick={() => handleStatusChange(budget.id, "sent")}
             >
-              <Check className="w-4 h-4 mr-2" />
-              Aprovar
+              Enviar
             </Button>
+          )}
+
+          {budget.status === "sent" && (
+            <>
+              <Button
+                size="sm"
+                className="bg-[#8EE6D2] text-[#071014] hover:bg-[#A6F3E2]"
+                onClick={() => handleStatusChange(budget.id, "approved")}
+              >
+                <Check className="w-4 h-4 mr-2" />
+                Aprovar
+              </Button>
+
+              <Button
+                size="sm"
+                variant="outline"
+                className="border-border/70 bg-transparent text-slate-300 hover:bg-white/5"
+                onClick={() => handleStatusChange(budget.id, "rejected")}
+              >
+                <X className="w-4 h-4 mr-2" />
+                Rejeitar
+              </Button>
+            </>
+          )}
+
+          {budget.status === "approved" && (
             <Button
               size="sm"
-              variant="outline"
-              className="flex-1"
-              onClick={() => handleStatusChange(budget.id, "rejected")}
+              className="bg-[#8EE6D2] text-[#071014] hover:bg-[#A6F3E2]"
+              onClick={() =>
+                handleFinalize(budget.id, budget.projectTitle, budget.clientName)
+              }
             >
-              <X className="w-4 h-4 mr-2" />
-              Rejeitar
+              <ArrowRight className="w-4 h-4 mr-2" />
+              Finalizar
             </Button>
-          </>
-        )}
-
-        {budget.status === "approved" && (
-          <Button
-            size="sm"
-            variant="default"
-            className="flex-1 bg-purple-600 hover:bg-purple-700"
-            onClick={() => handleFinalize(budget.id, budget.projectTitle, budget.clientName)}
-          >
-            <ArrowRight className="w-4 h-4 mr-2" />
-            Finalizar
-          </Button>
-        )}
+          )}
+        </div>
       </div>
     </Card>
   );
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Orçamentos</h1>
-          <p className="text-muted-foreground mt-1">Gerencie e acompanhe todos os seus orçamentos</p>
-        </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-blue-600 hover:bg-blue-700">
-              <Plus className="w-4 h-4 mr-2" />
-              Novo Orçamento
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Criar Novo Orçamento Personalizado</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <Input
-                  placeholder="Nome do Cliente"
-                  value={formData.clientName}
-                  onChange={(e) => setFormData({ ...formData, clientName: e.target.value })}
-                />
-                <Input
-                  placeholder="Email do Cliente"
-                  type="email"
-                  value={formData.clientEmail}
-                  onChange={(e) => setFormData({ ...formData, clientEmail: e.target.value })}
-                />
-              </div>
-              <Input
-                placeholder="Título do Projeto"
-                value={formData.projectTitle}
-                onChange={(e) => setFormData({ ...formData, projectTitle: e.target.value })}
-              />
-              <Input
-                placeholder="Descrição"
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              />
-              <div className="grid grid-cols-2 gap-4">
-                <Input
-                  placeholder="Valor"
-                  value={formData.amount}
-                  onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                />
-                <Input
-                  placeholder="Moeda"
-                  value={formData.currency}
-                  onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
-                />
-              </div>
-              <Input
-                placeholder="Itens do Orçamento"
-                value={formData.items}
-                onChange={(e) => setFormData({ ...formData, items: e.target.value })}
-              />
-              <Input
-                placeholder="Válido até"
-                type="date"
-                value={formData.validUntil}
-                onChange={(e) => setFormData({ ...formData, validUntil: e.target.value })}
-              />
-              <Button onClick={handleCreateBudget} className="w-full bg-blue-600 hover:bg-blue-700">
-                Criar Orçamento
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
-      </div>
+    <div className="space-y-6 rounded-3xl bg-[#0B0F17] p-6">
+      <div className="rounded-2xl border border-border/70 bg-gradient-to-br from-[#181A2E] via-[#111827] to-[#08232B] p-8 shadow-sm">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+          <div>
+            <Badge className="mb-4 bg-cyan-500/10 text-cyan-300 border border-cyan-400/40">
+              Financeiro Orbita
+            </Badge>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-4 bg-muted">
-          <TabsTrigger value="all">Meus Orçamentos</TabsTrigger>
-          <TabsTrigger value="pricing">Tabela de Precificação</TabsTrigger>
-          <TabsTrigger value="services">Tipos de Serviços</TabsTrigger>
-          <TabsTrigger value="status">Por Status</TabsTrigger>
+            <h1 className="text-4xl font-bold tracking-tight text-white font-['Space_Grotesk']">
+              Orçamentos 💰
+            </h1>
+
+            <p className="text-slate-300 mt-3 max-w-xl">
+              Gerencie, acompanhe e finalize seus orçamentos criativos.
+            </p>
+          </div>
+
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button
+                size="lg"
+                className="gap-2 whitespace-nowrap bg-[#8EE6D2] text-[#071014] hover:bg-[#A6F3E2]"
+              >
+                <Plus className="w-4 h-4" />
+                Novo Orçamento
+              </Button>
+            </DialogTrigger>
+
+            <DialogContent className="max-w-2xl bg-[#111620] border-border/70 text-white">
+              <DialogHeader>
+                <DialogTitle className="text-white">
+                  Criar Novo Orçamento Personalizado
+                </DialogTitle>
+              </DialogHeader>
+
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <Input
+                    placeholder="Nome do Cliente"
+                    value={formData.clientName}
+                    onChange={(e) => setFormData({ ...formData, clientName: e.target.value })}
+                  />
+
+                  <Input
+                    placeholder="Email do Cliente"
+                    type="email"
+                    value={formData.clientEmail}
+                    onChange={(e) => setFormData({ ...formData, clientEmail: e.target.value })}
+                  />
+                </div>
+
+                <Input
+                  placeholder="Título do Projeto"
+                  value={formData.projectTitle}
+                  onChange={(e) => setFormData({ ...formData, projectTitle: e.target.value })}
+                />
+
+                <Input
+                  placeholder="Descrição"
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                />
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <Input
+                    placeholder="Valor"
+                    value={formData.amount}
+                    onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                  />
+
+                  <Input
+                    placeholder="Moeda"
+                    value={formData.currency}
+                    onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
+                  />
+                </div>
+
+                <Input
+                  placeholder="Itens do Orçamento"
+                  value={formData.items}
+                  onChange={(e) => setFormData({ ...formData, items: e.target.value })}
+                />
+
+                <Input
+                  placeholder="Válido até"
+                  type="date"
+                  value={formData.validUntil}
+                  onChange={(e) => setFormData({ ...formData, validUntil: e.target.value })}
+                />
+
+                <Button
+                  onClick={handleCreateBudget}
+                  className="w-full bg-[#8EE6D2] text-[#071014] hover:bg-[#A6F3E2]"
+                >
+                  Criar Orçamento
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        <Card className="rounded-2xl border border-border/70 bg-[#111620] p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-slate-400">Total de Orçamentos</p>
+              <h2 className="text-3xl font-bold text-white mt-2">
+                {mockBudgets.length}
+              </h2>
+              <p className="text-xs text-cyan-400 mt-2">+2 esta semana</p>
+            </div>
+
+            <div className="h-12 w-12 rounded-xl bg-cyan-500/10 flex items-center justify-center">
+              <ShoppingCart className="w-5 h-5 text-cyan-400" />
+            </div>
+          </div>
+        </Card>
+
+        <Card className="rounded-2xl border border-border/70 bg-[#111620] p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-slate-400">Em Andamento</p>
+              <h2 className="text-3xl font-bold text-orange-400 mt-2">
+                {filterBudgets("sent").length}
+              </h2>
+              <p className="text-xs text-orange-400 mt-2">Aguardando resposta</p>
+            </div>
+
+            <div className="h-12 w-12 rounded-xl bg-orange-500/10 flex items-center justify-center">
+              <ArrowRight className="w-5 h-5 text-orange-400" />
+            </div>
+          </div>
+        </Card>
+
+        <Card className="rounded-2xl border border-border/70 bg-[#111620] p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-slate-400">Aprovados</p>
+              <h2 className="text-3xl font-bold text-white mt-2">
+                {filterBudgets("approved").length}
+              </h2>
+              <p className="text-xs text-green-400 mt-2">Este mês</p>
+            </div>
+
+            <div className="h-12 w-12 rounded-xl bg-green-500/10 flex items-center justify-center">
+              <Check className="w-5 h-5 text-green-400" />
+            </div>
+          </div>
+        </Card>
+
+        <Card className="rounded-2xl border border-border/70 bg-[#111620] p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-slate-400">Finalizados</p>
+              <h2 className="text-3xl font-bold text-white mt-2">
+                {filterBudgets("finalized").length}
+              </h2>
+              <p className="text-xs text-blue-400 mt-2">Projetos convertidos</p>
+            </div>
+
+            <div className="h-12 w-12 rounded-xl bg-blue-500/10 flex items-center justify-center">
+              <Check className="w-5 h-5 text-blue-400" />
+            </div>
+          </div>
+        </Card>
+      </div>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-6">
+        <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 h-auto rounded-2xl bg-[#111620] border border-border/70 p-1">
+          <TabsTrigger
+            value="all"
+            className="rounded-xl data-[state=active]:bg-[#8EE6D2] data-[state=active]:text-[#071014]"
+          >
+            Meus Orçamentos
+          </TabsTrigger>
+
+          <TabsTrigger
+            value="pricing"
+            className="rounded-xl data-[state=active]:bg-[#8EE6D2] data-[state=active]:text-[#071014]"
+          >
+            Precificação
+          </TabsTrigger>
+
+          <TabsTrigger
+            value="services"
+            className="rounded-xl data-[state=active]:bg-[#8EE6D2] data-[state=active]:text-[#071014]"
+          >
+            Serviços
+          </TabsTrigger>
+
+          <TabsTrigger
+            value="status"
+            className="rounded-xl data-[state=active]:bg-[#8EE6D2] data-[state=active]:text-[#071014]"
+          >
+            Status
+          </TabsTrigger>
         </TabsList>
 
         {/* Aba: Meus Orçamentos */}
-        <TabsContent value="all" className="space-y-4 mt-6">
-          <Tabs value={activeTab === "all" ? "all" : ""} className="w-full">
-            <TabsList className="grid w-full grid-cols-5 bg-muted mb-4">
-              <TabsTrigger value="all" onClick={() => setActiveTab("all")}>Geral</TabsTrigger>
-              <TabsTrigger value="approved" onClick={() => setActiveTab("approved")}>Aprovados</TabsTrigger>
-              <TabsTrigger value="sent" onClick={() => setActiveTab("sent")}>Em Andamento</TabsTrigger>
-              <TabsTrigger value="finalized" onClick={() => setActiveTab("finalized")}>Finalizados</TabsTrigger>
-              <TabsTrigger value="draft" onClick={() => setActiveTab("draft")}>Rascunhos</TabsTrigger>
-            </TabsList>
-          </Tabs>
-          {filterBudgets(activeTab === "all" ? undefined : activeTab).length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filterBudgets(activeTab === "all" ? undefined : activeTab).map(renderBudgetCard)}
+        <TabsContent value="all" className="space-y-4">
+          <div className="grid w-full grid-cols-2 md:grid-cols-5 gap-2">
+            {[
+              ["all", "Geral"],
+              ["approved", "Aprovados"],
+              ["sent", "Em Andamento"],
+              ["finalized", "Finalizados"],
+              ["draft", "Rascunhos"],
+            ].map(([value, label]) => (
+              <Button
+                key={value}
+                variant={statusFilter === value ? "default" : "outline"}
+                onClick={() => setStatusFilter(value)}
+                className={
+                  activeTab === value
+                    ? "bg-[#8EE6D2] text-[#071014] hover:bg-[#A6F3E2]"
+                    : "border-border/70 bg-[#111620] text-slate-300 hover:bg-[#18202e]"
+                }
+              >
+                {label}
+              </Button>
+            ))}
+          </div>
+          {filterBudgets(statusFilter === "all" ? undefined : statusFilter).length > 0 ? (
+            <div className="space-y-3">
+              {filterBudgets(statusFilter === "all" ? undefined : statusFilter).map(renderBudgetCard)}
             </div>
           ) : (
-            <Card className="p-12 text-center border-dashed">
-              <p className="text-muted-foreground">Nenhum orçamento encontrado nesta categoria</p>
+            <Card className="p-12 text-center border-dashed bg-[#111620] border-border/70">
+              <p className="text-slate-400">
+                Nenhum orçamento encontrado nesta categoria
+              </p>
             </Card>
           )}
         </TabsContent>
 
         {/* Aba: Tabela de Precificação */}
         <TabsContent value="pricing" className="space-y-6 mt-6">
-          <Card className="p-6 border-border">
-            <h2 className="text-2xl font-bold text-foreground mb-4">Tabela de Precificação</h2>
-            <p className="text-muted-foreground mb-6">
-              O valor do projeto pode ser dividido por etapa ou considerado de forma integral, levando em conta:
+          <Card className="rounded-2xl border border-border/70 bg-[#111620] p-6">
+            <Badge className="mb-4 bg-[#8EE6D2]/10 text-[#8EE6D2] border border-[#8EE6D2]/40">
+              Precificação
+            </Badge>
+
+            <h2 className="text-2xl font-bold text-white mb-3">
+              Tabela de Precificação
+            </h2>
+
+            <p className="text-slate-400 mb-6">
+              O valor do projeto pode ser dividido por etapa ou considerado de forma integral.
             </p>
-            <ul className="space-y-2 mb-8 text-foreground">
-              <li className="flex items-start gap-3">
-                <span className="text-primary font-bold">•</span>
-                <span><strong>Complexidade da coleção</strong> — Nível de detalhe e sofisticação do projeto</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-primary font-bold">•</span>
-                <span><strong>Quantidade de peças desenvolvidas</strong> — Número de itens a criar</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-primary font-bold">•</span>
-                <span><strong>Número de adaptações e revisões</strong> — Ajustes solicitados pelo cliente</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-primary font-bold">•</span>
-                <span><strong>Tempo de desenvolvimento</strong> — Horas/dias necessários</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-primary font-bold">•</span>
-                <span><strong>Exclusividade e licenciamento</strong> — Direitos de uso e propriedade intelectual</span>
-              </li>
+
+            <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
+              {[
+                "Complexidade da coleção",
+                "Quantidade de peças desenvolvidas",
+                "Número de adaptações e revisões",
+                "Tempo de desenvolvimento",
+                "Exclusividade e licenciamento",
+              ].map((item) => (
+                <li
+                  key={item}
+                  className="rounded-xl border border-white/10 bg-white/[0.03] p-4 text-sm text-slate-300"
+                >
+                  <span className="text-[#8EE6D2] font-bold mr-2">•</span>
+                  {item}
+                </li>
+              ))}
             </ul>
 
-            <h3 className="text-xl font-bold text-foreground mb-4">Qual Modelo Usar em Cada Job?</h3>
-            <div className="overflow-x-auto">
+            <h3 className="text-xl font-bold text-white mb-4">
+              Qual modelo usar em cada job?
+            </h3>
+
+            <div className="overflow-x-auto rounded-xl border border-white/10">
               <Table>
                 <TableHeader>
-                  <TableRow>
-                    <TableHead className="font-bold">Tipo de Serviço</TableHead>
-                    <TableHead className="font-bold">Por Hora</TableHead>
-                    <TableHead className="font-bold">Por Projeto</TableHead>
-                    <TableHead className="font-bold">Por Valor</TableHead>
+                  <TableRow className="border-white/10 hover:bg-transparent">
+                    <TableHead className="text-slate-300">Tipo de Serviço</TableHead>
+                    <TableHead className="text-slate-300">Por Hora</TableHead>
+                    <TableHead className="text-slate-300">Por Projeto</TableHead>
+                    <TableHead className="text-slate-300">Por Valor</TableHead>
                   </TableRow>
                 </TableHeader>
+
                 <TableBody>
                   {pricingTableData.map((row, idx) => (
-                    <TableRow key={idx}>
-                      <TableCell className="font-semibold text-foreground">{row.serviceType}</TableCell>
-                      <TableCell className="text-muted-foreground">{row.hourly}</TableCell>
-                      <TableCell className="text-muted-foreground">{row.project}</TableCell>
-                      <TableCell className="text-muted-foreground">{row.value}</TableCell>
+                    <TableRow key={idx} className="border-white/10 hover:bg-white/[0.03]">
+                      <TableCell className="font-semibold text-white">
+                        {row.serviceType}
+                      </TableCell>
+
+                      <TableCell className="text-slate-400">
+                        {row.hourly}
+                      </TableCell>
+
+                      <TableCell className="text-slate-400">
+                        {row.project}
+                      </TableCell>
+
+                      <TableCell className="text-slate-400">
+                        {row.value}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -495,56 +684,73 @@ function BudgetsManagementContent() {
         <TabsContent value="services" className="space-y-6 mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Identidade Visual */}
-            <Card className="p-6 border-border hover:shadow-lg transition-shadow">
-              <div className="flex items-start justify-between mb-4">
-                <h3 className="text-xl font-bold text-foreground">Identidade Visual</h3>
-                <Badge className="bg-blue-600">Estratégia</Badge>
+            {/* Identidade Visual */}
+            <Card className="rounded-2xl border border-border/70 bg-[#111620] p-6 hover:border-[#8EE6D2]/50 transition-all">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-xl bg-[#8EE6D2]/10 flex items-center justify-center">
+                    <Palette className="h-6 w-6 text-[#8EE6D2]" />
+                  </div>
+
+                  <div>
+                    <h3 className="text-xl font-bold text-white">
+                      Identidade Visual
+                    </h3>
+                    <p className="text-slate-400 text-sm">
+                      Branding
+                    </p>
+                  </div>
+                </div>
+
+                <Badge className="bg-[#8EE6D2]/10 text-[#8EE6D2] border border-[#8EE6D2]/40">
+                  Estratégia
+                </Badge>
               </div>
+
               <div className="space-y-4">
                 <div>
-                  <p className="text-sm font-semibold text-muted-foreground mb-2">O que vem nele:</p>
-                  <ul className="text-sm text-foreground space-y-1">
-                    <li>• Logo e variações</li>
+                  <p className="text-sm font-semibold text-muted-foreground mb-2">
+                    O que vem nele:
+                  </p>
+
+                  <ul className="text-sm text-slate-300 space-y-1">
+                    <li>• Logo</li>
+                    <li>• Manual de marca</li>
                     <li>• Paleta de cores</li>
                     <li>• Tipografia</li>
-                    <li>• Manual de marca</li>
                   </ul>
                 </div>
+
                 <div>
-                  <p className="text-sm font-semibold text-muted-foreground mb-2">Entregáveis:</p>
-                  <ul className="text-sm text-foreground space-y-1">
-                    <li>• Arquivos vetoriais (AI, EPS)</li>
-                    <li>• Guia de aplicação</li>
-                    <li>• Mockups</li>
+                  <p className="text-sm font-semibold text-muted-foreground mb-2">
+                    Entregáveis:
+                  </p>
+
+                  <ul className="text-sm text-slate-300 space-y-1">
+                    <li>• AI</li>
+                    <li>• PDF</li>
+                    <li>• SVG</li>
                   </ul>
                 </div>
               </div>
-              <Button className="w-full mt-4 bg-green-600 hover:bg-green-700" onClick={() => {
-                setFormData({
-                  ...formData,
-                  projectTitle: "Identidade Visual",
-                  description: "Desenvolvimento de identidade visual completa: logo, paleta de cores, tipografia e manual de marca.",
-                  items: "Logo e variações, Paleta de cores, Tipografia, Manual de marca",
-                });
-                setIsDialogOpen(true);
-                setActiveTab("all");
-                toast.success("Formulário preenchido com Identidade Visual");
-              }}>
-                <ShoppingCart className="w-4 h-4 mr-2" />
-                Solicitar
+
+              <Button className="w-full mt-6 bg-[#8EE6D2] text-[#071014] hover:bg-[#A6F3E2]">
+                Solicitar Serviço
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Card>
-
             {/* Criação de Estampas */}
-            <Card className="p-6 border-border hover:shadow-lg transition-shadow">
-              <div className="flex items-start justify-between mb-4">
-                <h3 className="text-xl font-bold text-foreground">Criação de Estampas</h3>
-                <Badge className="bg-purple-600">Design</Badge>
+            <Card className="rounded-2xl border border-border/70 bg-[#111620] p-6 hover:border-[#8EE6D2]/50 transition-all">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold text-white">Criação de Estampas</h3>
+                <Badge className="bg-[#8EE6D2]/10 text-[#8EE6D2] border border-[#8EE6D2]/40">
+                  Design
+                </Badge>
               </div>
               <div className="space-y-4">
                 <div>
                   <p className="text-sm font-semibold text-muted-foreground mb-2">O que vem nele:</p>
-                  <ul className="text-sm text-foreground space-y-1">
+                  <ul className="text-sm text-slate-300 space-y-1">
                     <li>• Designs originais</li>
                     <li>• Variações de cores</li>
                     <li>• Testes de impressão</li>
@@ -553,39 +759,31 @@ function BudgetsManagementContent() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-muted-foreground mb-2">Entregáveis:</p>
-                  <ul className="text-sm text-foreground space-y-1">
+                  <ul className="text-sm text-slate-300 space-y-1">
                     <li>• Arquivos de alta resolução</li>
                     <li>• Separação de cores</li>
                     <li>• Documentação técnica</li>
                   </ul>
                 </div>
               </div>
-              <Button className="w-full mt-4 bg-green-600 hover:bg-green-700" onClick={() => {
-                setFormData({
-                  ...formData,
-                  projectTitle: "Criação de Estampas",
-                  description: "Desenvolvimento de designs originais de estampas com variações de cores e testes de impressão.",
-                  items: "Designs originais, Variações de cores, Testes de impressão, Adaptações",
-                });
-                setIsDialogOpen(true);
-                setActiveTab("all");
-                toast.success("Formulário preenchido com Criação de Estampas");
-              }}>
-                <ShoppingCart className="w-4 h-4 mr-2" />
-                Solicitar
+              <Button className="w-full mt-6 bg-[#8EE6D2] text-[#071014] hover:bg-[#A6F3E2]">
+                Solicitar Serviço
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Card>
 
             {/* Gestão de Redes Sociais */}
-            <Card className="p-6 border-border hover:shadow-lg transition-shadow">
-              <div className="flex items-start justify-between mb-4">
-                <h3 className="text-xl font-bold text-foreground">Gestão de Redes Sociais</h3>
-                <Badge className="bg-green-600">Marketing</Badge>
+            <Card className="rounded-2xl border border-border/70 bg-[#111620] p-6 hover:border-[#8EE6D2]/50 transition-all">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold text-white">Gestão de Redes Sociais</h3>
+                <Badge className="bg-[#8EE6D2]/10 text-[#8EE6D2] border border-[#8EE6D2]/40">
+                  Marketing
+                </Badge>
               </div>
               <div className="space-y-4">
                 <div>
                   <p className="text-sm font-semibold text-muted-foreground mb-2">O que vem nele:</p>
-                  <ul className="text-sm text-foreground space-y-1">
+                  <ul className="text-sm text-slate-300 space-y-1">
                     <li>• Planejamento de conteúdo</li>
                     <li>• Criação de posts</li>
                     <li>• Agendamento</li>
@@ -594,39 +792,31 @@ function BudgetsManagementContent() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-muted-foreground mb-2">Entregáveis:</p>
-                  <ul className="text-sm text-foreground space-y-1">
+                  <ul className="text-sm text-slate-300 space-y-1">
                     <li>• Calendário editorial</li>
                     <li>• Relatórios mensais</li>
                     <li>• Conteúdo em múltiplos formatos</li>
                   </ul>
                 </div>
               </div>
-              <Button className="w-full mt-4 bg-green-600 hover:bg-green-700" onClick={() => {
-                setFormData({
-                  ...formData,
-                  projectTitle: "Gestão de Redes Sociais",
-                  description: "Planejamento, criação e agendamento de conteúdo para redes sociais com análise de desempenho.",
-                  items: "Planejamento de conteúdo, Criação de posts, Agendamento, Análise de desempenho",
-                });
-                setIsDialogOpen(true);
-                setActiveTab("all");
-                toast.success("Formulário preenchido com Gestão de Redes Sociais");
-              }}>
-                <ShoppingCart className="w-4 h-4 mr-2" />
-                Solicitar
+              <Button className="w-full mt-6 bg-[#8EE6D2] text-[#071014] hover:bg-[#A6F3E2]">
+                Solicitar Serviço
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Card>
 
             {/* Desenvolvimento de Coleção */}
-            <Card className="p-6 border-border hover:shadow-lg transition-shadow">
-              <div className="flex items-start justify-between mb-4">
-                <h3 className="text-xl font-bold text-foreground">Desenvolvimento de Coleção</h3>
-                <Badge className="bg-orange-600">Completo</Badge>
+            <Card className="rounded-2xl border border-border/70 bg-[#111620] p-6 hover:border-[#8EE6D2]/50 transition-all">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold text-white">Desenvolvimento de Coleção</h3>
+                <Badge className="bg-[#8EE6D2]/10 text-[#8EE6D2] border border-[#8EE6D2]/40">
+                  Completo
+                </Badge>
               </div>
               <div className="space-y-4">
                 <div>
                   <p className="text-sm font-semibold text-muted-foreground mb-2">O que vem nele:</p>
-                  <ul className="text-sm text-foreground space-y-1">
+                  <ul className="text-sm text-slate-300 space-y-1">
                     <li>• Pesquisa de tendências</li>
                     <li>• Conceituação</li>
                     <li>• Desenvolvimento de peças</li>
@@ -635,39 +825,31 @@ function BudgetsManagementContent() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-muted-foreground mb-2">Entregáveis:</p>
-                  <ul className="text-sm text-foreground space-y-1">
+                  <ul className="text-sm text-slate-300 space-y-1">
                     <li>• Lookbook</li>
                     <li>• Especificações técnicas</li>
                     <li>• Arquivos para produção</li>
                   </ul>
                 </div>
               </div>
-              <Button className="w-full mt-4 bg-green-600 hover:bg-green-700" onClick={() => {
-                setFormData({
-                  ...formData,
-                  projectTitle: "Desenvolvimento de Coleção",
-                  description: "Desenvolvimento completo de coleção com pesquisa, conceitualição, desenvolvimento e testes.",
-                  items: "Pesquisa de tendências, Conceitualição, Desenvolvimento de peças, Testes e ajustes",
-                });
-                setIsDialogOpen(true);
-                setActiveTab("all");
-                toast.success("Formulário preenchido com Desenvolvimento de Coleção");
-              }}>
-                <ShoppingCart className="w-4 h-4 mr-2" />
-                Solicitar
+              <Button className="w-full mt-6 bg-[#8EE6D2] text-[#071014] hover:bg-[#A6F3E2]">
+                Solicitar Serviço
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Card>
 
             {/* Consultoria Criativa */}
-            <Card className="p-6 border-border hover:shadow-lg transition-shadow">
-              <div className="flex items-start justify-between mb-4">
-                <h3 className="text-xl font-bold text-foreground">Consultoria Criativa</h3>
-                <Badge className="bg-indigo-600">Mentoria</Badge>
+            <Card className="rounded-2xl border border-border/70 bg-[#111620] p-6 hover:border-[#8EE6D2]/50 transition-all">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold text-white">Consultoria Criativa</h3>
+                <Badge className="bg-[#8EE6D2]/10 text-[#8EE6D2] border border-[#8EE6D2]/40">
+                  Mentoria
+                </Badge>
               </div>
               <div className="space-y-4">
                 <div>
                   <p className="text-sm font-semibold text-muted-foreground mb-2">O que vem nele:</p>
-                  <ul className="text-sm text-foreground space-y-1">
+                  <ul className="text-sm text-slate-300 space-y-1">
                     <li>• Sessões de mentoria</li>
                     <li>• Análise de portfólio</li>
                     <li>• Feedback estratégico</li>
@@ -676,39 +858,31 @@ function BudgetsManagementContent() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-muted-foreground mb-2">Entregáveis:</p>
-                  <ul className="text-sm text-foreground space-y-1">
+                  <ul className="text-sm text-slate-300 space-y-1">
                     <li>• Plano de ação</li>
                     <li>• Materiais de suporte</li>
                     <li>• Acompanhamento contínuo</li>
                   </ul>
                 </div>
               </div>
-              <Button className="w-full mt-4 bg-green-600 hover:bg-green-700" onClick={() => {
-                setFormData({
-                  ...formData,
-                  projectTitle: "Consultoria Criativa",
-                  description: "Sessões de mentoria criativa com análise de portfólio e feedback estratégico.",
-                  items: "Sessões de mentoria, Análise de portfólio, Feedback estratégico, Planejamento de carreira",
-                });
-                setIsDialogOpen(true);
-                setActiveTab("all");
-                toast.success("Formulário preenchido com Consultoria Criativa");
-              }}>
-                <ShoppingCart className="w-4 h-4 mr-2" />
-                Solicitar
+              <Button className="w-full mt-6 bg-[#8EE6D2] text-[#071014] hover:bg-[#A6F3E2]">
+                Solicitar Serviço
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Card>
 
             {/* Direção de Arte */}
-            <Card className="p-6 border-border hover:shadow-lg transition-shadow">
-              <div className="flex items-start justify-between mb-4">
-                <h3 className="text-xl font-bold text-foreground">Direção de Arte</h3>
-                <Badge className="bg-red-600">Liderança</Badge>
+            <Card className="rounded-2xl border border-border/70 bg-[#111620] p-6 hover:border-[#8EE6D2]/50 transition-all">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold text-white">Direção de Arte</h3>
+                <Badge className="bg-[#8EE6D2]/10 text-[#8EE6D2] border border-[#8EE6D2]/40">
+                  Liderança
+                </Badge>
               </div>
               <div className="space-y-4">
                 <div>
                   <p className="text-sm font-semibold text-muted-foreground mb-2">O que vem nele:</p>
-                  <ul className="text-sm text-foreground space-y-1">
+                  <ul className="text-sm text-slate-300 space-y-1">
                     <li>• Conceito criativo</li>
                     <li>• Direcionamento visual</li>
                     <li>• Supervisão de equipe</li>
@@ -717,26 +891,16 @@ function BudgetsManagementContent() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-muted-foreground mb-2">Entregáveis:</p>
-                  <ul className="text-sm text-foreground space-y-1">
+                  <ul className="text-sm text-slate-300 space-y-1">
                     <li>• Briefing criativo</li>
                     <li>• Direcionamentos visuais</li>
                     <li>• Relatórios de progresso</li>
                   </ul>
                 </div>
               </div>
-              <Button className="w-full mt-4 bg-green-600 hover:bg-green-700" onClick={() => {
-                setFormData({
-                  ...formData,
-                  projectTitle: "Direção de Arte",
-                  description: "Direção criativa completa com conceito, direcionamento visual e supervisão de equipe.",
-                  items: "Conceito criativo, Direcionamento visual, Supervisão de equipe, Aprovações",
-                });
-                setIsDialogOpen(true);
-                setActiveTab("all");
-                toast.success("Formulário preenchido com Direção de Arte");
-              }}>
-                <ShoppingCart className="w-4 h-4 mr-2" />
-                Solicitar
+              <Button className="w-full mt-6 bg-[#8EE6D2] text-[#071014] hover:bg-[#A6F3E2]">
+                Solicitar Serviço
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Card>
           </div>
@@ -744,22 +908,38 @@ function BudgetsManagementContent() {
 
         {/* Aba: Por Status */}
         <TabsContent value="status" className="space-y-4 mt-6">
-          <Tabs value={activeTab === "status" ? "all" : ""} className="w-full">
-            <TabsList className="grid w-full grid-cols-5 bg-muted mb-4">
-              <TabsTrigger value="all" onClick={() => setActiveTab("all")}>Geral</TabsTrigger>
-              <TabsTrigger value="approved" onClick={() => setActiveTab("approved")}>Aprovados</TabsTrigger>
-              <TabsTrigger value="sent" onClick={() => setActiveTab("sent")}>Em Andamento</TabsTrigger>
-              <TabsTrigger value="finalized" onClick={() => setActiveTab("finalized")}>Finalizados</TabsTrigger>
-              <TabsTrigger value="draft" onClick={() => setActiveTab("draft")}>Rascunhos</TabsTrigger>
-            </TabsList>
-          </Tabs>
-          {filterBudgets(activeTab === "status" ? "all" : activeTab).length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filterBudgets(activeTab === "status" ? "all" : activeTab).map(renderBudgetCard)}
+          <div className="grid w-full grid-cols-2 md:grid-cols-5 gap-2">
+            {[
+              ["all", "Geral"],
+              ["approved", "Aprovados"],
+              ["sent", "Em Andamento"],
+              ["finalized", "Finalizados"],
+              ["draft", "Rascunhos"],
+            ].map(([value, label]) => (
+              <Button
+                key={value}
+                variant={statusFilter === value ? "default" : "outline"}
+                onClick={() => setStatusFilter(value)}
+                className={
+                  statusFilter === value
+                    ? "bg-[#8EE6D2] text-[#071014] hover:bg-[#A6F3E2]"
+                    : "border-border/70 bg-[#111620] text-slate-300 hover:bg-[#18202e]"
+                }
+              >
+                {label}
+              </Button>
+            ))}
+          </div>
+
+          {filterBudgets(statusFilter === "all" ? undefined : statusFilter).length > 0 ? (
+            <div className="space-y-3">
+              {filterBudgets(statusFilter === "all" ? undefined : statusFilter).map(renderBudgetCard)}
             </div>
           ) : (
-            <Card className="p-12 text-center border-dashed">
-              <p className="text-muted-foreground">Nenhum orçamento encontrado nesta categoria</p>
+            <Card className="p-12 text-center border-dashed bg-[#111620] border-border/70">
+              <p className="text-slate-400">
+                Nenhum orçamento encontrado nesta categoria
+              </p>
             </Card>
           )}
         </TabsContent>
