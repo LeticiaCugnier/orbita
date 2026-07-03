@@ -11,6 +11,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { ChevronRight, ChevronLeft, Sparkles, CheckCircle2 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useLocation } from "wouter";
+import jsPDF from "jspdf";
 
 interface BriefingFormData {
   projectId: number;

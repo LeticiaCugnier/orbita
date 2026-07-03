@@ -268,7 +268,7 @@ function BudgetsManagementContent() {
       key={budget.id}
       className="rounded-2xl border border-border/70 bg-[#111620] p-5 hover:border-[#8EE6D2]/50 transition-all"
     >
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+      <div className="grid grid-cols-1 2xl:grid-cols-[minmax(320px,1fr)_460px_320px] items-center gap-5">
         <div className="flex items-start gap-4 min-w-0">
           <div className="h-12 w-12 rounded-xl bg-[#8EE6D2]/10 flex items-center justify-center shrink-0">
             <ShoppingCart className="w-5 h-5 text-[#8EE6D2]" />
@@ -289,20 +289,20 @@ function BudgetsManagementContent() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 lg:w-[420px]">
-          <div className="rounded-xl bg-white/[0.03] border border-white/10 p-3">
+        <div className="grid grid-cols-3 gap-3">
+          <div className="rounded-xl bg-white/[0.03] border border-white/10 p-3 min-h-[68px]">
             <p className="text-xs text-slate-500">Valor</p>
-            <p className="font-semibold text-white">{budget.amount}</p>
+            <p className="font-semibold text-white whitespace-nowrap">{budget.amount}</p>
           </div>
 
-          <div className="rounded-xl bg-white/[0.03] border border-white/10 p-3">
+          <div className="rounded-xl bg-white/[0.03] border border-white/10 p-3 min-h-[68px]">
             <p className="text-xs text-slate-500">Válido até</p>
-            <p className="font-semibold text-white">
+            <p className="font-semibold text-white whitespace-nowrap">
               {budget.validUntil.toLocaleDateString("pt-BR")}
             </p>
           </div>
 
-          <div className="rounded-xl bg-white/[0.03] border border-white/10 p-3">
+          <div className="rounded-xl bg-white/[0.03] border border-white/10 p-3 min-h-[68px]">
             <p className="text-xs text-slate-500">Status</p>
             <Badge className={`${getStatusColor(budget.status)} border mt-1`}>
               {getStatusLabel(budget.status)}
@@ -310,7 +310,7 @@ function BudgetsManagementContent() {
           </div>
         </div>
 
-        <div className="flex flex-wrap lg:flex-nowrap gap-2">
+        <div className="flex flex-wrap justify-end gap-2 min-w-[300px]">
           <Button
             size="sm"
             variant="outline"
@@ -584,7 +584,7 @@ function BudgetsManagementContent() {
                 variant={statusFilter === value ? "default" : "outline"}
                 onClick={() => setStatusFilter(value)}
                 className={
-                  activeTab === value
+                  statusFilter === value
                     ? "bg-[#8EE6D2] text-[#071014] hover:bg-[#A6F3E2]"
                     : "border-border/70 bg-[#111620] text-slate-300 hover:bg-[#18202e]"
                 }
